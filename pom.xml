@@ -10,6 +10,7 @@
         <module>client-auth-core</module>
         <module>code-flow-client-auth</module>
         <module>credentials-flow-client-auth</module>
+        <module>java-client-example</module>
     </modules>
 
     <properties>

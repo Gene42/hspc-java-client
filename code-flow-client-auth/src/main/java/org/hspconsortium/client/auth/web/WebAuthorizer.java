@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014. Health Services Platform Consortium. All Rights Reserved.
  */
-package org.hspconsortium.platform.util;
+package org.hspconsortium.client.auth.web;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -29,10 +29,16 @@ public class WebAuthorizer {
         this.httpClient = httpClient;
     }
 
-    public void authorize(HttpServletRequest request, HttpServletResponse response, String launchID, String fhirServiceURL) {
+    public void authorize(HttpServletRequest request, HttpServletResponse response, String clientId, String scope, String launchId, String fhirServiceURL) {
         String authEndpoint = metadata(fhirServiceURL);
         response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
-        response.setHeader("Location", authEndpoint);
+        response.setHeader("Location", authEndpoint+
+                "?client_id="+clientId +
+                "&response_type=code" +
+                "&scope="+scope + " launch:" + launchId +
+                "&redirect_uri=http://localhost:8080/hsp-reference-apps/static/apps/bilirubin-chart" +
+                "&state=d10fd891-59cf-d135-6658-165e861b038d"
+        );
     }
 
     private String metadata(String fhirServiceURL) {

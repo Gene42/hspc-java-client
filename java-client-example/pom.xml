@@ -10,15 +10,20 @@
     </parent>
 
     <groupId>org.hspconsortium</groupId>
-    <artifactId>hsp-code-flow-client-auth</artifactId>
+    <artifactId>hsp-java-client-example</artifactId>
     <version>0.8-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <properties>
         <springframework.version>4.1.6.RELEASE</springframework.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.hspconsortium</groupId>
+            <artifactId>hsp-code-flow-client-auth</artifactId>
+            <version>0.8-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -58,6 +63,8 @@
     </dependencies>
 
     <build>
+        <finalName>hsp-java-client-example</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -65,6 +72,16 @@
                 <version>2.18</version>
                 <configuration>
                     <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.3.0.M2</version>
+                <configuration>
+                    <webApp>
+                        <contextPath>/hsp-java-client-example</contextPath>
+                    </webApp>
                 </configuration>
             </plugin>
         </plugins>
