@@ -4,13 +4,13 @@
 
     <parent>
         <groupId>org.hspconsortium</groupId>
-        <artifactId>hsp-java-web-client</artifactId>
+        <artifactId>hsp-java-client</artifactId>
         <version>0.8-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.hspconsortium</groupId>
-    <artifactId>java-web-client</artifactId>
+    <artifactId>java-web-authorizer</artifactId>
     <version>0.8-SNAPSHOT</version>
     <packaging>war</packaging>
 

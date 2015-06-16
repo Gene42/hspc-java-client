@@ -2,12 +2,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.hspconsortium</groupId>
-    <artifactId>hsp-java-web-client</artifactId>
+    <artifactId>hsp-java-client</artifactId>
     <version>0.8-SNAPSHOT</version>
     <packaging>pom</packaging>
 
 	<modules>
-        <module>java-web-client</module>
+        <module>java-web-authorizer</module>
     </modules>
 
     <properties>
