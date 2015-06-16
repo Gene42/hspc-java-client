@@ -20,7 +20,8 @@ import java.io.InputStream;
 import java.io.StringWriter;
 
 public class WebAuthorizer {
-    JsonParser parser = new JsonParser();
+
+    private JsonParser parser = new JsonParser();
 
     private HttpClient httpClient = new DefaultHttpClient();
 
