@@ -58,7 +58,7 @@
     </dependencies>
 
     <build>
-        <finalName>hsp-java-web-client</finalName>
+        <finalName>hsp-java-web-authorizer</finalName>
 
         <plugins>
             <plugin>
@@ -75,7 +75,7 @@
                 <version>9.3.0.M2</version>
                 <configuration>
                     <webApp>
-                        <contextPath>/hsp-java-web-client</contextPath>
+                        <contextPath>/hsp-java-web-authorizer</contextPath>
                     </webApp>
                 </configuration>
             </plugin>
