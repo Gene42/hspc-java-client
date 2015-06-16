@@ -15,9 +15,6 @@
     <!--&lt;!&ndash; Configuration properties location &ndash;&gt;-->
     <!--<context:property-placeholder location="classpath:config/api.properties"/>-->
 
-    <context:annotation-config/>
-    <context:component-scan base-package="org.hspconsortium.platform" />
-
     <bean id="webAuthorizer" class="org.hspconsortium.platform.util.WebAuthorizer">
         <property name="httpClient" ref="httpClient" />
     </bean>

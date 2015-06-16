@@ -20,20 +20,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.hspconsortium</groupId>
-            <artifactId>hsp-api-webapp</artifactId>
-            <type>war</type>
-            <version>${hsp.version}</version>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${javax.servlet.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
+            <version>${springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
             <version>${springframework.version}</version>
         </dependency>
         <dependency>
@@ -45,7 +43,6 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${google.gson.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
