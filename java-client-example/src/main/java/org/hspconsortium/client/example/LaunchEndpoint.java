@@ -19,6 +19,7 @@ public class LaunchEndpoint {
     private WebAuthorizer webAuthorizer;
     private String clientId;
     private String scope;
+    private String redirectUri;
 
     @Autowired
     public void setWebAuthorizer(WebAuthorizer webAuthorizer) {
@@ -35,11 +36,16 @@ public class LaunchEndpoint {
         this.scope = scope;
     }
 
+    @javax.annotation.Resource(name="redirectUri")
+    public void setRedirectUri(String redirectUri) {
+        this.redirectUri = redirectUri;
+    }
+
     @RequestMapping(value = "/launch", method = RequestMethod.GET)
     public void handleLaunchRequest(HttpServletRequest request, HttpServletResponse response) {
         Map paramMap = request.getParameterMap();
 
-        webAuthorizer.authorize(request,response, clientId, scope, ((String[])paramMap.get("launch"))[0], ((String[])paramMap.get("iss"))[0]);
+        webAuthorizer.authorize(request,response, clientId, scope, redirectUri, ((String[])paramMap.get("launch"))[0], ((String[])paramMap.get("iss"))[0]);
     }
 
 }

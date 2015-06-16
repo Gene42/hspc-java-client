@@ -25,4 +25,8 @@
         <constructor-arg value="${example.scopes}"/>
     </bean>
 
+    <bean id="redirectUri" class="java.lang.String">
+        <constructor-arg value="${example.redirectUri}"/>
+    </bean>
+
 </beans>
