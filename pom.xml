@@ -7,7 +7,8 @@
     <packaging>pom</packaging>
 
 	<modules>
-        <module>java-web-authorizer</module>
+        <module>java-client-auth</module>
+        <module>java-web-client-auth</module>
     </modules>
 
     <properties>

@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>org.hspconsortium</groupId>
-    <artifactId>java-web-authorizer</artifactId>
+    <artifactId>hsp-java-web-client-auth</artifactId>
     <version>0.8-SNAPSHOT</version>
     <packaging>war</packaging>
 
