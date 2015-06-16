@@ -7,9 +7,9 @@
     <packaging>pom</packaging>
 
 	<modules>
-        <module>java-client-auth</module>
-        <module>java-web-client-auth</module>
-        <module>java-credentials-client-auth</module>
+        <module>client-auth-core</module>
+        <module>code-flow-client-auth</module>
+        <module>credentials-flow-client-auth</module>
     </modules>
 
     <properties>

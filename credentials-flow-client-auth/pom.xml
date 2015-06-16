@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>org.hspconsortium</groupId>
-    <artifactId>hsp-java-client-auth</artifactId>
+    <artifactId>hsp-credentials-flow-client-auth</artifactId>
     <version>0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
 

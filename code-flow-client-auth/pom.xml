@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>org.hspconsortium</groupId>
-    <artifactId>hsp-java-web-client-auth</artifactId>
+    <artifactId>hsp-code-flow-client-auth</artifactId>
     <version>0.8-SNAPSHOT</version>
     <packaging>war</packaging>
 
