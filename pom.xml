@@ -9,6 +9,7 @@
 	<modules>
         <module>java-client-auth</module>
         <module>java-web-client-auth</module>
+        <module>java-credentials-client-auth</module>
     </modules>
 
     <properties>
