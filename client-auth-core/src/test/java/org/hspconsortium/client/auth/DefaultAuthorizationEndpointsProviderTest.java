@@ -1,5 +1,6 @@
 package org.hspconsortium.client.auth;
 
+import org.hspconsortium.client.auth.impl.DefaultAuthorizationEndpointsProvider;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package org.hspconsortium.client.auth;
+package org.hspconsortium.client.auth.impl;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -9,6 +9,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.hspconsortium.client.auth.AuthorizationEndpoints;
+import org.hspconsortium.client.auth.AuthorizationEndpointsProvider;
 
 import java.io.IOException;
 import java.io.InputStream;

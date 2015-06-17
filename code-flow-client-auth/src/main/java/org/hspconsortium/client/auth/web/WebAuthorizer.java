@@ -8,7 +8,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.hspconsortium.client.auth.AuthorizationEndpoints;
 import org.hspconsortium.client.auth.AuthorizationEndpointsProvider;
-import org.hspconsortium.client.auth.DefaultAuthorizationEndpointsProvider;
+import org.hspconsortium.client.auth.impl.DefaultAuthorizationEndpointsProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
