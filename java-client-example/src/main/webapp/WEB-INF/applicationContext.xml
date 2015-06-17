@@ -7,19 +7,26 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
        default-lazy-init="false">
 
-    <!-- Security Configuration -->
-    <!--<import resource="classpath:/org/hspconsortium/platform/util/applicationContext-rest.xml"/>-->
-    <!--<import resource="securityContext-open.xml"/>-->
-    <!--&lt;!&ndash;<import resource="securityContext.xml"/>&ndash;&gt;-->
+    <!-- Configuration properties location -->
+    <context:property-placeholder location="classpath:config/config.properties"/>
 
-    <!--&lt;!&ndash; Configuration properties location &ndash;&gt;-->
-    <!--<context:property-placeholder location="classpath:config/api.properties"/>-->
-
-    <bean id="webAuthorizer" class="org.hspconsortium.platform.util.WebAuthorizer">
+    <bean id="webAuthorizer" class="org.hspconsortium.client.auth.web.WebAuthorizer">
         <property name="httpClient" ref="httpClient" />
     </bean>
 
     <bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient">
+    </bean>
+
+    <bean id="clientId" class="java.lang.String">
+        <constructor-arg value="${example.clientId}"/>
+    </bean>
+
+    <bean id="scope" class="java.lang.String">
+        <constructor-arg value="${example.scopes}"/>
+    </bean>
+
+    <bean id="redirectUri" class="java.lang.String">
+        <constructor-arg value="${example.redirectUri}"/>
     </bean>
 
 </beans>

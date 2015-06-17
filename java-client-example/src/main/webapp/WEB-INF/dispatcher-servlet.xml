@@ -10,7 +10,7 @@
        default-lazy-init="false">
 
     <!-- Activates scanning of @Repository and @Service -->
-    <context:component-scan base-package="org.hspconsortium.platform"/>
+    <context:component-scan base-package="org.hspconsortium.client"/>
 
     <!-- Configures the @Controller programming model -->
     <mvc:annotation-driven/>

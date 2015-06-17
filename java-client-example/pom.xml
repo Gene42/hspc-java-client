@@ -10,9 +10,9 @@
     </parent>
 
     <groupId>org.hspconsortium</groupId>
-    <artifactId>hsp-code-flow-client-auth</artifactId>
+    <artifactId>hsp-java-client-example</artifactId>
     <version>0.8-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <properties>
         <springframework.version>4.1.6.RELEASE</springframework.version>
@@ -21,8 +21,8 @@
     <dependencies>
         <dependency>
             <groupId>org.hspconsortium</groupId>
-            <artifactId>hsp-client-auth-core</artifactId>
-            <version>${hsp.client.version}</version>
+            <artifactId>hsp-code-flow-client-auth</artifactId>
+            <version>0.8-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -52,17 +52,19 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
+            <version>4.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
+            <version>2.4</version>
         </dependency>
     </dependencies>
 
     <build>
+        <finalName>hsp-java-client-example</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -70,6 +72,16 @@
                 <version>2.18</version>
                 <configuration>
                     <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.3.0.M2</version>
+                <configuration>
+                    <webApp>
+                        <contextPath>/hsp-java-client-example</contextPath>
+                    </webApp>
                 </configuration>
             </plugin>
         </plugins>
