@@ -47,6 +47,8 @@ public class DefaultAccessTokenProvider implements AccessTokenProvider {
 
     protected HttpResponse post(String serviceUrl, String clientId, String clientSecret, byte[] payload){
         HttpPost postRequest = new HttpPost(serviceUrl);
+        postRequest.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
         if(StringUtils.isNotBlank(clientId) && StringUtils.isNotBlank(clientSecret)){
             setAuthorizationHeader(postRequest, clientId, clientSecret);
         }
@@ -60,8 +62,6 @@ public class DefaultAccessTokenProvider implements AccessTokenProvider {
         String authHeader = String.format("%s:%s", clientId, clientSecret);
         String encoded = new Base64().encode(authHeader.getBytes());
         request.addHeader("Authorization", String.format("Basic %s", new String(encoded)));
-        request.addHeader("Content-Type", "application/x-www-form-urlencoded");
-
     }
 
     protected HttpResponse sendPayload(HttpEntityEnclosingRequestBase request, byte[] payload) {
