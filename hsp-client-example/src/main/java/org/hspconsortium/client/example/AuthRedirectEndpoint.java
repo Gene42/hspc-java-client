@@ -25,7 +25,8 @@ public class AuthRedirectEndpoint {
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }
-    @javax.annotation.Resource(name="tokenRedirectUri")
+
+    @javax.annotation.Resource(name="authRedirectUri")
     public void setTokenRedirectUri(String tokenRedirectUri) {
         this.tokenRedirectUri = tokenRedirectUri;
     }
@@ -38,6 +39,7 @@ public class AuthRedirectEndpoint {
         CodeFlowAccessTokenRequest tokenRequest = new CodeFlowAccessTokenRequest(clientId, "secret", paramMap.get("code")[0], tokenRedirectUri );
         AccessTokenProvider tokenProvider = new DefaultAccessTokenProvider();
         AccessToken accessToken = tokenProvider.getAccessToken("http://localhost:8080/hsp-auth/token", tokenRequest);
+        accessToken.getTokenType();
     }
 
 }
