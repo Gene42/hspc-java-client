@@ -10,11 +10,7 @@
     <!-- Configuration properties location -->
     <context:property-placeholder location="classpath:config/config.properties"/>
 
-    <bean id="codeFlowAuthorizer" class="org.hspconsortium.client.auth.web.WebAuthorizer">
-        <property name="httpClient" ref="httpClient" />
-    </bean>
-
-    <bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient">
+    <bean id="webAuthorizer" class="org.hspconsortium.client.auth.codeflow.CodeFlowAuthorizer">
     </bean>
 
     <bean id="clientId" class="java.lang.String">
@@ -25,8 +21,12 @@
         <constructor-arg value="${example.scopes}"/>
     </bean>
 
-    <bean id="redirectUri" class="java.lang.String">
-        <constructor-arg value="${example.redirectUri}"/>
+    <bean id="authRedirectUri" class="java.lang.String">
+        <constructor-arg value="${example.authRedirectUri}"/>
+    </bean>
+
+    <bean id="tokenRedirectUri" class="java.lang.String">
+        <constructor-arg value="${example.tokenRedirectUri}"/>
     </bean>
 
 </beans>

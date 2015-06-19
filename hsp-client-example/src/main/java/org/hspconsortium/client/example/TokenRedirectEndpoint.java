@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @Controller
-public class RedirectEndpoint {
+public class TokenRedirectEndpoint {
 
-    @RequestMapping(value = "/redirect", method = RequestMethod.GET)
+    @RequestMapping(value = "/token-redirect", method = RequestMethod.GET)
     public void handleLaunchRequest(HttpServletRequest request, HttpServletResponse response) {
         Map paramMap = request.getParameterMap();
         paramMap.entrySet();
