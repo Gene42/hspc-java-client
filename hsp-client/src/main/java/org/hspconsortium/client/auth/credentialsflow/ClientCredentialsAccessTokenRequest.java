@@ -13,9 +13,9 @@ public class ClientCredentialsAccessTokenRequest extends AbstractAccessTokenRequ
 
     public ClientCredentialsAccessTokenRequest(String clientId, String clientSecret, Scopes scopes) {
         super(clientId, clientSecret, AccessTokenGrantType.CLIENT_CREDENTIALS);
-//        if(scopes != null){
-//            this.tokenRequestParams.put("scope", scopes.asParamValue());
-//        }
+        if(scopes != null){
+            this.tokenRequestParams.put("scope", scopes.asParamValue());
+        }
     }
 
     @Override

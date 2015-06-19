@@ -1,9 +1,9 @@
 package org.hspconsortium.client.auth;
 
-public interface AccessTokenRequest {
+import java.util.Map;
 
+public interface AccessTokenRequest {
     public String getClientId();
     public String getClientSecret();
-    public String serialize();
-
+    public Map<String, String> getParameters();
 }

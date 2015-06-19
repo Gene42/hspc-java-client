@@ -1,17 +1,9 @@
 package org.hspconsortium.client.auth;
 
-import org.apache.commons.lang.StringUtils;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractAccessTokenRequest implements AccessTokenRequest {
-
-    private static final String REQUEST_PARAM_FORMAT = "%s=%s";
 
     private Map<String, String> tokenRequestParams = new HashMap<String, String>();
     private String clientId;
@@ -23,32 +15,26 @@ public abstract class AbstractAccessTokenRequest implements AccessTokenRequest {
         this.clientSecret = clientSecret;
     }
 
-    public String serialize(){
-        Map<String, String> mergedParams = new HashMap<String, String>(this.tokenRequestParams);
-        Map<String, String> additionalParams = getAdditionalParameters();
-        if(additionalParams != null){
-            mergedParams.putAll(getAdditionalParameters());
-        }
-        List<String> params = new ArrayList<String>();
-
-        try {
-            for(String param : mergedParams.keySet()){
-                params.add(String.format(REQUEST_PARAM_FORMAT, param, URLEncoder.encode(mergedParams.get(param), "UTF-8")));
-            }
-
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-
-        return StringUtils.join(params, "&");
-    }
-
     public String getClientId() {
         return clientId;
     }
 
     public String getClientSecret() {
         return clientSecret;
+    }
+
+    @Override
+    public Map<String, String> getParameters() {
+        return this.getMergedParameters();
+    }
+
+    private Map<String, String> getMergedParameters(){
+        Map<String, String> mergedParams = new HashMap<String, String>(this.tokenRequestParams);
+        Map<String, String> additionalParams = getAdditionalParameters();
+        if(additionalParams != null){
+            mergedParams.putAll(getAdditionalParameters());
+        }
+        return mergedParams;
     }
 
     public abstract Map<String, String> getAdditionalParameters();
