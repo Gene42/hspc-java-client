@@ -2,6 +2,8 @@ package org.hspconsortium.client.auth;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +35,15 @@ public abstract class AbstractAccessTokenRequest implements AccessTokenRequest {
             params.add(String.format(REQUEST_PARAM_FORMAT, param, mergedParams.get(param)));
         }
 
-        return StringUtils.join(params, "&");
+        String body = StringUtils.join(params, "&");
+
+        try {
+            body = URLEncoder.encode(body, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return body;
     }
 
     public String getClientId() {
