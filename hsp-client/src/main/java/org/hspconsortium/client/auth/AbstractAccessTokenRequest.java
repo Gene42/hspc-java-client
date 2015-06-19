@@ -31,19 +31,16 @@ public abstract class AbstractAccessTokenRequest implements AccessTokenRequest {
         }
         List<String> params = new ArrayList<String>();
 
-        for(String param : mergedParams.keySet()){
-            params.add(String.format(REQUEST_PARAM_FORMAT, param, mergedParams.get(param)));
-        }
-
-        String body = StringUtils.join(params, "&");
-
         try {
-            body = URLEncoder.encode(body, "UTF-8");
+            for(String param : mergedParams.keySet()){
+                params.add(String.format(REQUEST_PARAM_FORMAT, param, URLEncoder.encode(mergedParams.get(param), "UTF-8")));
+            }
+
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
 
-        return body;
+        return StringUtils.join(params, "&");
     }
 
     public String getClientId() {

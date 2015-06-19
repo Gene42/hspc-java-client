@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class CodeFlowAccessTokenRequest extends AbstractAccessTokenRequest {
 
-    public CodeFlowAccessTokenRequest(String clientId, String clientSecret, AccessTokenGrantType grantType) {
+    public CodeFlowAccessTokenRequest(String clientId, String clientSecret) {
         super(clientId, clientSecret, AccessTokenGrantType.AUTHORIZATION_CODE);
     }
 
