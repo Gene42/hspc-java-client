@@ -7,10 +7,8 @@
     <packaging>pom</packaging>
 
 	<modules>
-        <module>client-auth-core</module>
-        <module>code-flow-client-auth</module>
-        <module>credentials-flow-client-auth</module>
-        <module>java-client-example</module>
+        <module>hsp-client</module>
+        <module>hsp-client-example</module>
     </modules>
 
     <properties>
