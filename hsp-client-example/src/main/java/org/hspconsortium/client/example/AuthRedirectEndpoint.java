@@ -3,10 +3,13 @@
  */
 package org.hspconsortium.client.example;
 
+import ca.uhn.fhir.model.api.Bundle;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 import org.hspconsortium.client.auth.AccessToken;
 import org.hspconsortium.client.auth.AccessTokenProvider;
 import org.hspconsortium.client.auth.codeflow.CodeFlowAccessTokenRequest;
 import org.hspconsortium.client.auth.impl.DefaultAccessTokenProvider;
+import org.hspconsortium.client.auth.impl.DefaultClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,6 +43,10 @@ public class AuthRedirectEndpoint {
         AccessTokenProvider tokenProvider = new DefaultAccessTokenProvider();
         AccessToken accessToken = tokenProvider.getAccessToken("http://localhost:8080/hsp-auth/token", tokenRequest);
         accessToken.getTokenType();
+
+        DefaultClient defaultClient = new DefaultClient("http://localhost:8080/hsp-api/data");
+        Bundle results = defaultClient.search().forResource(Patient.class).where(Patient.FAMILY.matches().value("Wilson")).execute();
+        results.getEntries();
     }
 
 }

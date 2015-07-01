@@ -15,7 +15,7 @@ public class CodeFlowAuthorizer {
     private AuthorizationEndpointsProvider authorizationEndpointsProvider = new DefaultAuthorizationEndpointsProvider();
 
     public void authorize(HttpServletRequest request, HttpServletResponse response, String clientId, String scope, String redirectUri, String launchId, String fhirServiceURL) {
-        String authEndpoint = metadata(fhirServiceURL);
+        String authEndpoint = getAuthorizationEndpoint(fhirServiceURL);
         response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
         response.setHeader("Location", authEndpoint+
                 "?client_id="+clientId +
@@ -26,7 +26,7 @@ public class CodeFlowAuthorizer {
         );
     }
 
-    private String metadata(String fhirServiceURL) {
+    private String getAuthorizationEndpoint(String fhirServiceURL) {
         AuthorizationEndpoints authEndpoints = authorizationEndpointsProvider.getAuthorizationEndpoints(fhirServiceURL);
         return authEndpoints.getAuthorizationEndpoint();
     }
