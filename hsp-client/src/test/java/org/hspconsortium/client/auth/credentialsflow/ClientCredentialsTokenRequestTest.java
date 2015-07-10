@@ -2,12 +2,12 @@ package org.hspconsortium.client.auth.credentialsflow;
 
 import ca.uhn.fhir.model.api.Bundle;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.rest.client.IGenericClient;
 import org.hspconsortium.client.auth.AccessToken;
 import org.hspconsortium.client.auth.AccessTokenProvider;
 import org.hspconsortium.client.auth.Scopes;
 import org.hspconsortium.client.auth.SimpleScope;
 import org.apache.commons.lang.StringUtils;
-import org.hspconsortium.client.AbstractFhirClient;
 import org.hspconsortium.client.auth.impl.DefaultAccessTokenProvider;
 import org.hspconsortium.client.impl.CredentialsFlowFhirClient;
 import org.junit.Assert;
@@ -30,7 +30,7 @@ public class ClientCredentialsTokenRequestTest {
         Assert.assertNotNull(accessToken);
         Assert.assertTrue(StringUtils.isNotBlank(accessToken.getValue()));
 
-        AbstractFhirClient defaultClient = new CredentialsFlowFhirClient("http://localhost:8080/hsp-api/data", "test_client", "secret", requestedScopes);
+        IGenericClient defaultClient = new CredentialsFlowFhirClient("http://localhost:8080/hsp-api/data", "test_client", "secret", requestedScopes);
         Bundle results = defaultClient.search().forResource(Patient.class).where(Patient.FAMILY.matches().value("Wilson")).execute();
         results.getEntries();
 

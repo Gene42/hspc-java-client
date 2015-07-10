@@ -1,4 +1,3 @@
-<%@ page import="org.hspconsortium.client.AbstractFhirClient" %>
 <%@ page import="org.hspconsortium.client.impl.ClientFlowFhirClient" %>
 <%@ page import="ca.uhn.fhir.model.api.Bundle" %>
 <%@ page import="ca.uhn.fhir.model.dstu2.resource.Patient" %>
@@ -9,6 +8,7 @@
 <%@ page import="ca.uhn.fhir.model.dstu2.composite.QuantityDt" %>
 <%@ page import="org.apache.commons.lang.StringUtils" %>
 <%@ page import="ca.uhn.fhir.model.primitive.DateTimeDt" %>
+<%@ page import="ca.uhn.fhir.rest.client.IGenericClient" %>
 <html>
 <head>
     <style>
@@ -25,7 +25,7 @@
 </head>
 <body>
 <%
-    AbstractFhirClient defaultClient = new ClientFlowFhirClient(request, "secret");
+    IGenericClient defaultClient = new ClientFlowFhirClient(request, "secret");
     FhirClientContext context = (FhirClientContext) request.getSession().getAttribute(FhirClientContext.FHIR_CLIENT_CONTEXT);
     Patient patient = defaultClient.read().resource(Patient.class).withId(context.getAccessToken().getPatientId()).execute();
 
