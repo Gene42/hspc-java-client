@@ -17,8 +17,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.hspconsortium.client.auth.AccessToken;
 import org.hspconsortium.client.auth.AccessTokenProvider;
 import org.hspconsortium.client.auth.AccessTokenRequest;
-import org.hspconsortium.client.auth.authcontext.AuthContext;
-import org.hspconsortium.client.auth.authcontext.AuthContextHolder;
+import org.hspconsortium.client.auth.context.AuthContext;
+import org.hspconsortium.client.auth.context.AuthContextHolder;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,7 +29,7 @@ import java.util.Map;
 public class DefaultAccessTokenProvider implements AccessTokenProvider {
 
     private static final String ACCESS_TOKEN_KEY = "access_token";
-    private static final String PATIENT_ID_KEY = "patientId";
+    private static final String PATIENT_ID_KEY = "patient";
 
     @Override
     public AccessToken getAccessToken(String tokenEndpointUrl, AccessTokenRequest request) {

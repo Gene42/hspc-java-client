@@ -2,18 +2,14 @@
  * Copyright (c) 2015. Healthcare Services Platform Consortium. All Rights Reserved.
  */
 
-package org.hspconsortium.client.auth.authcontext;
+package org.hspconsortium.client.auth.context;
 
 public class AuthContextHolder {
 
     private static ThreadLocal<AuthContext> authContextHolder = new ThreadLocal<AuthContext>();
 
     public static AuthContext getAuthContext(){
-        AuthContext authContext = authContextHolder.get();
-        if(authContext == null){
-            authContextHolder.set(authContext);
-        }
-        return authContext;
+        return authContextHolder.get();
     }
 
     public static void setAuthContext(AuthContext authContext){

@@ -2,13 +2,13 @@
  * Copyright (c) 2015. Healthcare Services Platform Consortium. All Rights Reserved.
  */
 
-package org.hspconsortium.client.auth.authcontext;
+package org.hspconsortium.client.auth.context;
 
 import org.hspconsortium.client.auth.AccessToken;
 
 public final class AuthContext {
 
-    private AccessToken bearerToken;
+    private final AccessToken bearerToken;
 
     public AuthContext(AccessToken bearerToken) {
         this.bearerToken = bearerToken;
@@ -16,10 +16,6 @@ public final class AuthContext {
 
     public AccessToken getBearerToken() {
         return bearerToken;
-    }
-
-    public void setBearerToken(AccessToken bearerToken) {
-        this.bearerToken = bearerToken;
     }
 
 }

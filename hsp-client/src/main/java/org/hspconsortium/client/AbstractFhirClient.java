@@ -1,4 +1,4 @@
-package org.hspconsortium.client.auth.impl;
+package org.hspconsortium.client;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.api.Bundle;
@@ -18,27 +18,20 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hspconsortium.client.auth.authcontext.AuthContext;
-import org.hspconsortium.client.auth.authcontext.AuthContextHolder;
+import org.hspconsortium.client.auth.AccessToken;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class DefaultClient implements IGenericClient  {
+public abstract class AbstractFhirClient implements IGenericClient  {
 
-    private FhirContext fhirContext = FhirContext.forDstu2();
-    private IGenericClient client;
-    private BearerTokenAuthorizationHeaderInterceptor authorizationHeaderInterceptor = new BearerTokenAuthorizationHeaderInterceptor();
-
-    public DefaultClient(String serverBase) {
-        this.client = fhirContext.newRestfulGenericClient(serverBase);
-        this.client.registerInterceptor(authorizationHeaderInterceptor);
-    }
+    protected FhirContext hapiFhirContext = FhirContext.forDstu2();
+    protected IGenericClient client;
 
     @Override
     public FhirContext getFhirContext() {
-        return this.fhirContext;
+        return this.hapiFhirContext;
     }
 
     @Override
@@ -236,13 +229,18 @@ public class DefaultClient implements IGenericClient  {
         return this.client.vread(tClass, s, s1);
     }
 
-    static class BearerTokenAuthorizationHeaderInterceptor implements IClientInterceptor {
+    protected static class BearerTokenAuthorizationHeaderInterceptor implements IClientInterceptor {
+
+        private final AccessToken accessToken;
+
+        public BearerTokenAuthorizationHeaderInterceptor(AccessToken accessToken) {
+            this.accessToken = accessToken;
+        }
 
         @Override
         public void interceptRequest(HttpRequestBase httpRequestBase) {
-            AuthContext authContext = AuthContextHolder.getAuthContext();
 
-            httpRequestBase.addHeader("Authorization", String.format("Bearer %s", authContext.getBearerToken().getValue()));
+            httpRequestBase.addHeader("Authorization", String.format("Bearer %s", accessToken.getValue()));
         }
 
         @Override

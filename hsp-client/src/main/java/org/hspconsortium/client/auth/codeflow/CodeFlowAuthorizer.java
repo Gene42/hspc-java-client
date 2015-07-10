@@ -3,32 +3,58 @@
  */
 package org.hspconsortium.client.auth.codeflow;
 
-import org.hspconsortium.client.auth.AuthorizationEndpoints;
-import org.hspconsortium.client.auth.AuthorizationEndpointsProvider;
-import org.hspconsortium.client.auth.impl.DefaultAuthorizationEndpointsProvider;
+import org.hspconsortium.client.auth.Scope;
+import org.hspconsortium.client.auth.Scopes;
+import org.hspconsortium.client.auth.SimpleScope;
+import org.hspconsortium.client.auth.context.FhirClientContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 public class CodeFlowAuthorizer {
 
-    private AuthorizationEndpointsProvider authorizationEndpointsProvider = new DefaultAuthorizationEndpointsProvider();
+    static final String ISSUER_PARAMETER = "iss";
+    static final String LAUNCH_ID_PARAMETER = "launch";
 
-    public void authorize(HttpServletRequest request, HttpServletResponse response, String clientId, String scope, String redirectUri, String launchId, String fhirServiceURL) {
-        String authEndpoint = getAuthorizationEndpoint(fhirServiceURL);
+    private FhirClientContext fhirContext;
+
+    public void authorize(HttpServletRequest request, HttpServletResponse response, String clientId, String scope) {
+        authorize(request, response, clientId, scope, null);
+    }
+
+    public void authorize(HttpServletRequest request, HttpServletResponse response, String clientId, String scope, String redirectUri) {
+        Map paramMap = request.getParameterMap();
+        String launchId = ((String[]) paramMap.get(LAUNCH_ID_PARAMETER))[0];
+        String fhirServiceURL = ((String[]) paramMap.get(ISSUER_PARAMETER))[0];
+
+        if (redirectUri == null) {
+            String url = request.getRequestURL().toString();
+            String dispatcher = request.getPathInfo();
+            int index = url.indexOf(dispatcher);
+            if (index > -1 ) {
+                redirectUri = url.substring(0,index);
+            }
+        }
+
+        Scopes scopes = new Scopes();
+        scopes.add(new SimpleScope(scope));
+        fhirContext = new FhirClientContext(fhirServiceURL, launchId, clientId, scopes, redirectUri);
+        HttpSession httpSession = request.getSession();
+        httpSession.setAttribute(FhirClientContext.FHIR_CLIENT_CONTEXT, fhirContext );
+
+        String authEndpoint = fhirContext.getAuthorizationEndpointsProvider()
+                .getAuthorizationEndpoints()
+                .getAuthorizationEndpoint();
+
         response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
-        response.setHeader("Location", authEndpoint+
-                "?client_id="+clientId +
+        response.setHeader("Location", authEndpoint +
+                "?client_id=" + clientId +
                 "&response_type=code" +
-                "&scope="+scope + " launch:" + launchId +
+                "&scope=" + scopes.asParamValue() + " launch:" + launchId +
                 "&redirect_uri=" + redirectUri +
-                "&state=d10fd891-59cf-d135-6658-165e861b038d"
+                "&state=" + fhirContext.getStateProvider().getNewState()
         );
     }
-
-    private String getAuthorizationEndpoint(String fhirServiceURL) {
-        AuthorizationEndpoints authEndpoints = authorizationEndpointsProvider.getAuthorizationEndpoints(fhirServiceURL);
-        return authEndpoints.getAuthorizationEndpoint();
-    }
-
 }

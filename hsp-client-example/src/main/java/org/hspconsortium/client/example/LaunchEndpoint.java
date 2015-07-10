@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 @Controller
 public class LaunchEndpoint {
@@ -19,7 +18,7 @@ public class LaunchEndpoint {
     private CodeFlowAuthorizer codeFlowAuthorizer;
     private String clientId;
     private String scope;
-    private String authRedirectUri;
+    private String redirectUri;
 
     @Autowired
     public void setCodeFlowAuthorizer(CodeFlowAuthorizer codeFlowAuthorizer) {
@@ -36,16 +35,14 @@ public class LaunchEndpoint {
         this.scope = scope;
     }
 
-    @javax.annotation.Resource(name="authRedirectUri")
-    public void setAuthRedirectUri(String authRedirectUri) {
-        this.authRedirectUri = authRedirectUri;
+    @javax.annotation.Resource(name="redirectUri")
+    public void setRedirectUri(String redirectUri) {
+        this.redirectUri = redirectUri;
     }
 
     @RequestMapping(value = "/launch", method = RequestMethod.GET)
     public void handleLaunchRequest(HttpServletRequest request, HttpServletResponse response) {
-        Map paramMap = request.getParameterMap();
-
-        codeFlowAuthorizer.authorize(request, response, clientId, scope, authRedirectUri, ((String[]) paramMap.get("launch"))[0], ((String[]) paramMap.get("iss"))[0]);
+        codeFlowAuthorizer.authorize(request, response, clientId, scope, redirectUri);
     }
 
 }

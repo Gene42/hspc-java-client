@@ -11,8 +11,8 @@ public class DefaultAuthorizationEndpointsProviderTest {
     @Test()
     public void testGetAuthorizationEndpoints(){
         String serviceUrl = "http://localhost:8080/hsp-api/data";
-        DefaultAuthorizationEndpointsProvider authEndpointsProvider = new DefaultAuthorizationEndpointsProvider();
-        AuthorizationEndpoints authEndpoints = authEndpointsProvider.getAuthorizationEndpoints(serviceUrl);
+        DefaultAuthorizationEndpointsProvider authEndpointsProvider = new DefaultAuthorizationEndpointsProvider(serviceUrl);
+        AuthorizationEndpoints authEndpoints = authEndpointsProvider.getAuthorizationEndpoints();
 
         Assert.assertNotNull(authEndpoints);
 

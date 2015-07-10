@@ -23,6 +23,9 @@ public class DefaultAuthorizationEndpointsProvider implements AuthorizationEndpo
     private static final String AUTH_ENDPOINT_EXTENSION = "http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris#authorize";
     private static final String TOKEN_ENDPOINT_EXTENSION = "http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris#token";
     private JsonParser parser = new JsonParser();
+    private final String fhirServiceUrl;
+
+    private AuthorizationEndpoints authorizationEndpoints;
 
     private HttpClient httpClient = new DefaultHttpClient();
 
@@ -30,9 +33,17 @@ public class DefaultAuthorizationEndpointsProvider implements AuthorizationEndpo
         this.httpClient = httpClient;
     }
 
+    public DefaultAuthorizationEndpointsProvider(String fhirServiceUrl) {
+        this.fhirServiceUrl = fhirServiceUrl;
+    }
+
     @Override
-    public AuthorizationEndpoints getAuthorizationEndpoints(String serviceUrl) {
-        HttpGet getRequest = new HttpGet(serviceUrl+"/metadata?_format=json");
+    public AuthorizationEndpoints getAuthorizationEndpoints() {
+        if (authorizationEndpoints != null) {
+            return authorizationEndpoints;
+        }
+
+        HttpGet getRequest = new HttpGet(fhirServiceUrl+"/metadata?_format=json");
         String authEndpoint = null;
         String tokenEndpoint = null;
 
@@ -62,6 +73,18 @@ public class DefaultAuthorizationEndpointsProvider implements AuthorizationEndpo
         } catch(IOException ioe) {
             throw new RuntimeException("Error sending Http Request", ioe);
         }
-        return new AuthorizationEndpoints(authEndpoint, tokenEndpoint);
+        setAuthorizationEndpoints(authEndpoint, tokenEndpoint);
+        return authorizationEndpoints;
     }
+
+    private void setAuthorizationEndpoints(String authEndpoint, String tokenEndpoint) {
+        if (authorizationEndpoints == null) {
+            synchronized (this) {
+                if (authorizationEndpoints == null ) {
+                    authorizationEndpoints = new AuthorizationEndpoints(authEndpoint, tokenEndpoint);
+                }
+            }
+        }
+    }
+
 }
