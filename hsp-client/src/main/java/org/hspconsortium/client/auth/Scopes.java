@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2015. Health Services Platform Consortium. All Rights Reserved.
+ */
 package org.hspconsortium.client.auth;
 
 import org.apache.commons.lang.StringUtils;

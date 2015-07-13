@@ -1,23 +1,8 @@
+/*
+ * Copyright (c) 2015. Health Services Platform Consortium. All Rights Reserved.
+ */
 package org.hspconsortium.client.impl;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.api.Bundle;
-import ca.uhn.fhir.model.api.IQueryParameterType;
-import ca.uhn.fhir.model.api.IResource;
-import ca.uhn.fhir.model.base.resource.BaseConformance;
-import ca.uhn.fhir.model.primitive.DateTimeDt;
-import ca.uhn.fhir.model.primitive.IdDt;
-import ca.uhn.fhir.model.primitive.UriDt;
-import ca.uhn.fhir.rest.api.MethodOutcome;
-import ca.uhn.fhir.rest.client.IClientInterceptor;
-import ca.uhn.fhir.rest.client.IGenericClient;
-import ca.uhn.fhir.rest.client.exceptions.FhirClientConnectionException;
-import ca.uhn.fhir.rest.gclient.*;
-import ca.uhn.fhir.rest.server.EncodingEnum;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hspconsortium.client.AbstractFhirClient;
 import org.hspconsortium.client.auth.AccessToken;
 import org.hspconsortium.client.auth.AccessTokenProvider;
@@ -26,10 +11,6 @@ import org.hspconsortium.client.auth.Scopes;
 import org.hspconsortium.client.auth.credentialsflow.ClientCredentialsAccessTokenRequest;
 import org.hspconsortium.client.auth.impl.DefaultAccessTokenProvider;
 import org.hspconsortium.client.auth.impl.DefaultAuthorizationEndpointsProvider;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 public class CredentialsFlowFhirClient extends AbstractFhirClient  {
 

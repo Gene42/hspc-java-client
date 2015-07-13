@@ -1,16 +1,15 @@
 /*
- * Copyright (c) 2014. Health Services Platform Consortium. All Rights Reserved.
+ * Copyright (c) 2015. Health Services Platform Consortium. All Rights Reserved.
  */
 package org.hspconsortium.client.auth.codeflow;
 
-import org.hspconsortium.client.auth.Scope;
 import org.hspconsortium.client.auth.Scopes;
 import org.hspconsortium.client.auth.SimpleScope;
 import org.hspconsortium.client.auth.context.FhirClientContext;
+import org.hspconsortium.client.auth.context.FhirClientContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 public class CodeFlowAuthorizer {
@@ -41,8 +40,7 @@ public class CodeFlowAuthorizer {
         Scopes scopes = new Scopes();
         scopes.add(new SimpleScope(scope));
         fhirContext = new FhirClientContext(fhirServiceURL, launchId, clientId, scopes, redirectUri);
-        HttpSession httpSession = request.getSession();
-        httpSession.setAttribute(FhirClientContext.FHIR_CLIENT_CONTEXT, fhirContext );
+        FhirClientContextHolder.addFhirClientContext(fhirContext);
 
         String authEndpoint = fhirContext.getAuthorizationEndpointsProvider()
                 .getAuthorizationEndpoints()
@@ -54,7 +52,7 @@ public class CodeFlowAuthorizer {
                 "&response_type=code" +
                 "&scope=" + scopes.asParamValue() + " launch:" + launchId +
                 "&redirect_uri=" + redirectUri +
-                "&state=" + fhirContext.getStateProvider().getNewState()
+                "&state=" + fhirContext.getState()
         );
     }
 }

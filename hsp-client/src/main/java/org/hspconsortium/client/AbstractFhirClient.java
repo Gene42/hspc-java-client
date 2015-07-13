@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2015. Health Services Platform Consortium. All Rights Reserved.
+ */
 package org.hspconsortium.client;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -19,15 +22,27 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hspconsortium.client.auth.AccessToken;
+import org.hspconsortium.client.auth.context.FhirClientContext;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractFhirClient implements IGenericClient  {
+public abstract class AbstractFhirClient implements FhirClient  {
 
-    protected FhirContext hapiFhirContext = FhirContext.forDstu2();
+    protected final FhirContext hapiFhirContext = FhirContext.forDstu2();
     protected IGenericClient client;
+    protected FhirClientContext fhirClientContext;
+
+    @Override
+    public void setFhirClientContext(FhirClientContext fhirClientContext) {
+        this.fhirClientContext = fhirClientContext;
+    }
+
+    @Override
+    public FhirClientContext getFhirClientContext() {
+        return this.fhirClientContext;
+    }
 
     @Override
     public FhirContext getFhirContext() {

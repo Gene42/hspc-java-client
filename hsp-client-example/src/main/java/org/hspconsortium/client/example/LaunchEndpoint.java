@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Health Services Platform Consortium. All Rights Reserved.
+ * Copyright (c) 2015. Health Services Platform Consortium. All Rights Reserved.
  */
 package org.hspconsortium.client.example;
 

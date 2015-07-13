@@ -1,14 +1,14 @@
-<%@ page import="org.hspconsortium.client.impl.ClientFlowFhirClient" %>
+<%--Copyright (c) 2015. Healthcare Services Platform Consortium. All Rights Reserved.--%>
+<%@ page import="org.hspconsortium.client.impl.CodeFlowFhirClient" %>
 <%@ page import="ca.uhn.fhir.model.api.Bundle" %>
 <%@ page import="ca.uhn.fhir.model.dstu2.resource.Patient" %>
-<%@ page import="org.hspconsortium.client.auth.context.FhirClientContext" %>
 <%@ page import="ca.uhn.fhir.model.dstu2.resource.Observation" %>
 <%@ page import="java.util.List" %>
 <%@ page import="ca.uhn.fhir.model.api.BundleEntry" %>
 <%@ page import="ca.uhn.fhir.model.dstu2.composite.QuantityDt" %>
 <%@ page import="org.apache.commons.lang.StringUtils" %>
 <%@ page import="ca.uhn.fhir.model.primitive.DateTimeDt" %>
-<%@ page import="ca.uhn.fhir.rest.client.IGenericClient" %>
+<%@ page import="org.hspconsortium.client.FhirClient" %>
 <html>
 <head>
     <style>
@@ -25,12 +25,12 @@
 </head>
 <body>
 <%
-    IGenericClient defaultClient = new ClientFlowFhirClient(request, "secret");
-    FhirClientContext context = (FhirClientContext) request.getSession().getAttribute(FhirClientContext.FHIR_CLIENT_CONTEXT);
-    Patient patient = defaultClient.read().resource(Patient.class).withId(context.getAccessToken().getPatientId()).execute();
+    FhirClient fhirClient = new CodeFlowFhirClient(request, "secret");
+    String patientId = fhirClient.getFhirClientContext().getAccessToken().getPatientId();
+    Patient patient = fhirClient.read().resource(Patient.class).withId(patientId).execute();
 
-    Bundle results = defaultClient.search().forResource(Observation.class).where(
-            Observation.SUBJECT.hasId(context.getAccessToken().getPatientId())).
+    Bundle results = fhirClient.search().forResource(Observation.class).where(
+            Observation.SUBJECT.hasId(patientId)).
             and(Observation.CODE.exactly().identifier("8302-2")).execute();
 
 %>

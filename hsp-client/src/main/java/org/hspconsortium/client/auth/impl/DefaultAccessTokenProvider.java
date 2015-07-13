@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2015. Health Services Platform Consortium. All Rights Reserved.
+ */
 package org.hspconsortium.client.auth.impl;
 
 import com.google.gson.JsonElement;
@@ -17,8 +20,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.hspconsortium.client.auth.AccessToken;
 import org.hspconsortium.client.auth.AccessTokenProvider;
 import org.hspconsortium.client.auth.AccessTokenRequest;
-import org.hspconsortium.client.auth.context.AuthContext;
-import org.hspconsortium.client.auth.context.AuthContextHolder;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,12 +42,10 @@ public class DefaultAccessTokenProvider implements AccessTokenProvider {
         JsonObject rootResponse = null;
         try {
             rootResponse = (JsonObject)parser.parse(new InputStreamReader(response.getEntity().getContent()));
-            AccessToken accessToken = new DefaultAccessToken(
+            return new DefaultAccessToken(
                     getResponseElement(ACCESS_TOKEN_KEY, rootResponse),
                     getResponseElement(PATIENT_ID_KEY, rootResponse)
                     );
-            AuthContextHolder.setAuthContext(new AuthContext(accessToken));
-            return accessToken;
         } catch (IOException io_ex) {
             throw new RuntimeException("There was a problem attempting to get the access token", io_ex);
         }

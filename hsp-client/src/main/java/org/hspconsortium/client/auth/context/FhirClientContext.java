@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2015. Health Services Platform Consortium. All Rights Reserved.
+ */
 package org.hspconsortium.client.auth.context;
 
 import org.hspconsortium.client.auth.AccessToken;
@@ -9,25 +12,27 @@ import org.hspconsortium.client.auth.impl.DefaultStateProvider;
 
 public final class FhirClientContext {
 
-    public static final String FHIR_CLIENT_CONTEXT = "fhirClientContext";
-
     private final AuthorizationEndpointsProvider authorizationEndpointsProvider;
-    private final StateProvider stateProvider = new DefaultStateProvider();
+    private final StateProvider stateProvider;
 
     private final String fhirApi;
     private final String launchId;
     private final String clientId;
     private final Scopes scopes;
     private final String redirectUri;
+    private final String state;
     private AccessToken accessToken;
 
-    public FhirClientContext(String fhirApi, String launchId,String clientId, Scopes scopes, String redirectUri) {
+    public FhirClientContext(String fhirApi, String launchId,String clientId,
+                             Scopes scopes, String redirectUri) {
         this.fhirApi     = fhirApi;
         this.launchId    = launchId;
         this.clientId    = clientId;
         this.scopes      = scopes;
         this.redirectUri = redirectUri;
         this.authorizationEndpointsProvider = new DefaultAuthorizationEndpointsProvider(fhirApi);
+        this.stateProvider = new DefaultStateProvider();
+        this.state       = stateProvider.getNewState();
     }
 
     public String getFhirApi() {
@@ -48,6 +53,10 @@ public final class FhirClientContext {
 
     public String getRedirectUri() {
         return redirectUri;
+    }
+
+    public String getState() {
+        return state;
     }
 
     public AccessToken getAccessToken() {
