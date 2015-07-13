@@ -25,15 +25,27 @@
 </head>
 <body>
 <%
+    // NOTE: The following business logic code would normally be found in the controller,
+    //       which would populate a model and only the model would be provided to the view.
+    //       We have not separated the Model, View and Controller in order to show all the
+    //       code in one location.
+
+    // Create a CodeFlowFhirClient for querying the Fhir Service
     FhirClient fhirClient = new CodeFlowFhirClient(request, "secret");
+
+    // Retrieve the patientId from the FhirClientContext. The patientId is returned to the
+    // App along with the Access Token
     String patientId = fhirClient.getFhirClientContext().getAccessToken().getPatientId();
+
+    // Use the CodeFlowFhirClient to read the Patient info
     Patient patient = fhirClient.read().resource(Patient.class).withId(patientId).execute();
 
+    // Use the CodeFlowFhirClient to search for Observations for the Patient
     Bundle results = fhirClient.search().forResource(Observation.class).where(
             Observation.SUBJECT.hasId(patientId)).
             and(Observation.CODE.exactly().identifier("8302-2")).execute();
-
 %>
+<%--    Display the Patient name --%>
 <h2><%= StringUtils.join(patient.getName().get(0).getGiven(), " ") + " " + patient.getName().get(0).getFamily().get(0) %></h2>
 
 <div>
@@ -41,6 +53,7 @@
         <tr><th>Date</th><th>Height</th> </tr>
 
     <%
+    // Iterate over the Observations and display them in a table
     List<BundleEntry> entries = results.getEntries();
     for (BundleEntry entry : entries) {
 %>
@@ -53,7 +66,5 @@
 %>
     </table>
 </div>
-
-
 </body>
 </html>
