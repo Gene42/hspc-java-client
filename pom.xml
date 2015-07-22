@@ -6,7 +6,21 @@
     <version>0.8-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-	<modules>
+    <organization>
+        <name>Healthcare Services Platform Consortium</name>
+        <url>http://hspconsortium.org</url>
+    </organization>
+
+    <inceptionYear>2014</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>Apache Software License 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <modules>
         <module>hsp-client</module>
         <module>hsp-client-example</module>
     </modules>
@@ -27,6 +41,23 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>update-project-license</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>update-project-license</goal>
+                        </goals>
+                        <configuration>
+                            <licenseName>apache_v2</licenseName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
