@@ -3,14 +3,22 @@
  */
 package org.hspconsortium.client.auth;
 
-public class AuthorizationEndpoints {
+import java.io.Serializable;
 
-    private String authorizationEndpoint;
-    private String tokenEndpoint;
+public class AuthorizationEndpoints implements Serializable {
 
-    public AuthorizationEndpoints(String authorizationEndpoint, String tokenEndpoint) {
+    private final String fhirServiceApi;
+    private final String authorizationEndpoint;
+    private final String tokenEndpoint;
+
+    public AuthorizationEndpoints(String fhirServiceApi, String authorizationEndpoint, String tokenEndpoint) {
+        this.fhirServiceApi = fhirServiceApi;
         this.authorizationEndpoint = authorizationEndpoint;
         this.tokenEndpoint = tokenEndpoint;
+    }
+
+    public String getFhirServiceApi() {
+        return fhirServiceApi;
     }
 
     public String getAuthorizationEndpoint() {

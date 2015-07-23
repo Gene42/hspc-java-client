@@ -3,7 +3,9 @@
  */
 package org.hspconsortium.client.auth;
 
-public class SimpleScope implements Scope {
+import java.io.Serializable;
+
+public class SimpleScope implements Serializable, Scope {
 
     private String value;
 

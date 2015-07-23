@@ -6,10 +6,11 @@ package org.hspconsortium.client.auth.codeflow;
 import org.hspconsortium.client.auth.AbstractAccessTokenRequest;
 import org.hspconsortium.client.auth.AccessTokenGrantType;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CodeFlowAccessTokenRequest extends AbstractAccessTokenRequest {
+public class CodeFlowAccessTokenRequest extends AbstractAccessTokenRequest implements Serializable {
 
     private Map<String, String> tokenRequestParams = new HashMap<String, String>();
 

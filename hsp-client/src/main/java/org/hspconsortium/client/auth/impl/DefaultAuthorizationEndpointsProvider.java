@@ -19,19 +19,9 @@ public class DefaultAuthorizationEndpointsProvider implements AuthorizationEndpo
 
     private static final String AUTH_ENDPOINT_EXTENSION = "http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris#authorize";
     private static final String TOKEN_ENDPOINT_EXTENSION = "http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris#token";
-    private final String fhirServiceUrl;
-
-    private AuthorizationEndpoints authorizationEndpoints;
-
-    public DefaultAuthorizationEndpointsProvider(String fhirServiceUrl) {
-        this.fhirServiceUrl = fhirServiceUrl;
-    }
 
     @Override
-    public AuthorizationEndpoints getAuthorizationEndpoints() {
-        if (authorizationEndpoints != null) {
-            return authorizationEndpoints;
-        }
+    public AuthorizationEndpoints getAuthorizationEndpoints(String fhirServiceUrl) {
 
         FhirContext hapiFhirContext = FhirContext.forDstu2();
         Conformance conformance;
@@ -56,7 +46,6 @@ public class DefaultAuthorizationEndpointsProvider implements AuthorizationEndpo
                 tokenEndpoint = extensionDt.getValueAsPrimitive().getValueAsString();
             }
         }
-        authorizationEndpoints = new AuthorizationEndpoints(authEndpoint, tokenEndpoint);
-        return authorizationEndpoints;
+        return new AuthorizationEndpoints(fhirServiceUrl, authEndpoint, tokenEndpoint);
     }
 }

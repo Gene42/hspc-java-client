@@ -4,5 +4,5 @@
 package org.hspconsortium.client.auth;
 
 public interface AuthorizationEndpointsProvider {
-    AuthorizationEndpoints getAuthorizationEndpoints();
+    AuthorizationEndpoints getAuthorizationEndpoints(String serviceUrl);
 }

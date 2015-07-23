@@ -4,10 +4,12 @@
 package org.hspconsortium.client.auth;
 
 import org.apache.commons.lang.StringUtils;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Scopes {
+public class Scopes implements Serializable {
 
     private List<String> scopes = new ArrayList<String>();
 

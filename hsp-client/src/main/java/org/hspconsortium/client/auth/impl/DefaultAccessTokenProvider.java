@@ -29,7 +29,6 @@ import java.util.Map;
 
 public class DefaultAccessTokenProvider implements AccessTokenProvider {
 
-    private static final String ACCESS_TOKEN_KEY = "access_token";
     private static final String PATIENT_ID_KEY = "patient";
 
     @Override
@@ -43,9 +42,13 @@ public class DefaultAccessTokenProvider implements AccessTokenProvider {
         try {
             rootResponse = (JsonObject)parser.parse(new InputStreamReader(response.getEntity().getContent()));
             return new DefaultAccessToken(
-                    getResponseElement(ACCESS_TOKEN_KEY, rootResponse),
-                    getResponseElement(PATIENT_ID_KEY, rootResponse)
-                    );
+                    getResponseElement(AccessToken.ACCESS_TOKEN, rootResponse),
+                    getResponseElement(PATIENT_ID_KEY, rootResponse),
+                    getResponseElement(AccessToken.TOKEN_TYPE, rootResponse),
+                    getResponseElement(AccessToken.EXPIRES_IN, rootResponse),
+                    getResponseElement(AccessToken.SCOPE, rootResponse),
+                    getResponseElement(AccessToken.REFRESH_TOKEN, rootResponse)
+            );
         } catch (IOException io_ex) {
             throw new RuntimeException("There was a problem attempting to get the access token", io_ex);
         }

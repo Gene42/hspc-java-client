@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015. Health Services Platform Consortium. All Rights Reserved.
  */
-package org.hspconsortium.client;
+package org.hspconsortium.client.session;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.api.Bundle;
@@ -22,26 +22,26 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hspconsortium.client.auth.AccessToken;
-import org.hspconsortium.client.auth.context.FhirClientContext;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractFhirClient implements FhirClient  {
+public abstract class AbstractFhirSession implements FhirSession {
 
-    protected final FhirContext hapiFhirContext = FhirContext.forDstu2();
-    protected IGenericClient client;
-    protected FhirClientContext fhirClientContext;
+    private final FhirContext hapiFhirContext = FhirContext.forDstu2();
+    private final IGenericClient client;
+    private final AccessToken accessToken;
 
-    @Override
-    public void setFhirClientContext(FhirClientContext fhirClientContext) {
-        this.fhirClientContext = fhirClientContext;
+    public AbstractFhirSession(String fhirServiceApi, AccessToken accessToken) {
+        this.accessToken = accessToken;
+        this.client = hapiFhirContext.newRestfulGenericClient(fhirServiceApi);
+        this.client.registerInterceptor(new BearerTokenAuthorizationHeaderInterceptor(accessToken));
     }
 
     @Override
-    public FhirClientContext getFhirClientContext() {
-        return this.fhirClientContext;
+    public AccessToken getAccessToken() {
+        return accessToken;
     }
 
     @Override

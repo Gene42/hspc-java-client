@@ -7,10 +7,11 @@ import org.hspconsortium.client.auth.AbstractAccessTokenRequest;
 import org.hspconsortium.client.auth.AccessTokenGrantType;
 import org.hspconsortium.client.auth.Scopes;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClientCredentialsAccessTokenRequest extends AbstractAccessTokenRequest {
+public class ClientCredentialsAccessTokenRequest extends AbstractAccessTokenRequest implements Serializable {
 
     private Map<String, String> tokenRequestParams = new HashMap<String, String>();
 

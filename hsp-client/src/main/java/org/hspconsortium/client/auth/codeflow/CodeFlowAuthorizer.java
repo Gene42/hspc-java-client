@@ -3,10 +3,8 @@
  */
 package org.hspconsortium.client.auth.codeflow;
 
-import org.hspconsortium.client.auth.Scopes;
-import org.hspconsortium.client.auth.SimpleScope;
-import org.hspconsortium.client.auth.context.FhirClientContext;
-import org.hspconsortium.client.auth.context.FhirClientContextHolder;
+import org.hspconsortium.client.auth.*;
+import org.hspconsortium.client.auth.context.FhirSessionContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,10 +15,20 @@ public class CodeFlowAuthorizer {
     static final String ISSUER_PARAMETER = "iss";
     static final String LAUNCH_ID_PARAMETER = "launch";
 
-    private FhirClientContext fhirContext;
+    private FhirSessionContextHolder fhirSessionContextHolder;
+    private AuthorizationEndpointsProvider authorizationEndpointsProvider;
+    private StateProvider stateProvider;
 
-    public void authorize(HttpServletRequest request, HttpServletResponse response, String clientId, String scope) {
-        authorize(request, response, clientId, scope, null);
+    public void setFhirSessionContextHolder(FhirSessionContextHolder fhirSessionContextHolder) {
+        this.fhirSessionContextHolder = fhirSessionContextHolder;
+    }
+
+    public void setAuthorizationEndpointsProvider(AuthorizationEndpointsProvider authorizationEndpointsProvider) {
+        this.authorizationEndpointsProvider = authorizationEndpointsProvider;
+    }
+
+    public void setStateProvider(StateProvider stateProvider) {
+        this.stateProvider = stateProvider;
     }
 
     public void authorize(HttpServletRequest request, HttpServletResponse response, String clientId, String scope, String redirectUri) {
@@ -37,22 +45,35 @@ public class CodeFlowAuthorizer {
             }
         }
 
-        Scopes scopes = new Scopes();
-        scopes.add(new SimpleScope(scope));
-        fhirContext = new FhirClientContext(fhirServiceURL, launchId, clientId, scopes, redirectUri);
-        FhirClientContextHolder.addFhirClientContext(fhirContext);
-
-        String authEndpoint = fhirContext.getAuthorizationEndpointsProvider()
-                .getAuthorizationEndpoints()
-                .getAuthorizationEndpoint();
+        AuthorizationRequest authRequest = createAuthorizationRequest(fhirServiceURL, launchId, clientId, scope, redirectUri);
 
         response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
-        response.setHeader("Location", authEndpoint +
-                "?client_id=" + clientId +
-                "&response_type=code" +
-                "&scope=" + scopes.asParamValue() + " launch:" + launchId +
-                "&redirect_uri=" + redirectUri +
-                "&state=" + fhirContext.getState()
+        response.setHeader("Location", authRequest.getAuthorizationEndpoints().getAuthorizationEndpoint() +
+                "?client_id=" + authRequest.getClientId() +
+                "&response_type=" + authRequest.getResponseType() +
+                "&scope=" + authRequest.getScopes().asParamValue() + " launch:" + authRequest.getLaunchId() +
+                "&redirect_uri=" + authRequest.getRedirectUri() +
+                "&state=" + authRequest.getOauthState()
         );
+    }
+
+    private void authorize(String fhirServiceURL, String launchId, String clientId, String scope, String redirectUri) {
+        AuthorizationRequest authRequest = createAuthorizationRequest(fhirServiceURL, launchId, clientId, scope, redirectUri);
+
+        //TODO redirect to a server for authorization
+
+    }
+
+    private CodeFlowAuthorizationRequest createAuthorizationRequest(String fhirServiceURL, String launchId, String clientId, String scope, String redirectUri) {
+        Scopes scopes = new Scopes();
+        scopes.add(new SimpleScope(scope));
+        AuthorizationEndpoints authEndpoints = authorizationEndpointsProvider.getAuthorizationEndpoints(fhirServiceURL);
+
+        CodeFlowAuthorizationRequest authRequest =
+                new CodeFlowAuthorizationRequest(authEndpoints, clientId, "code", scopes, launchId,
+                        redirectUri, stateProvider.getNewState());
+        fhirSessionContextHolder.addAuthorizationRequest(authRequest);
+
+        return authRequest;
     }
 }

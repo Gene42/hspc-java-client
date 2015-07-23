@@ -8,7 +8,6 @@
 
 	<modules>
         <module>hsp-client</module>
-        <module>hsp-client-example</module>
     </modules>
 
     <properties>
