@@ -244,6 +244,11 @@ public abstract class AbstractFhirSession implements FhirSession {
         return this.client.vread(tClass, s, s1);
     }
 
+    @Override
+    public IMeta meta() {
+        return this.client.meta();
+    }
+
     protected static class BearerTokenAuthorizationHeaderInterceptor implements IClientInterceptor {
 
         private final AccessToken accessToken;
