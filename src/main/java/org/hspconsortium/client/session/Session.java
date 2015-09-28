@@ -21,6 +21,7 @@
 package org.hspconsortium.client.session;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.api.SummaryEnum;
 import org.hspconsortium.client.auth.access.AccessToken;
 import org.hspconsortium.client.auth.access.AccessTokenRequest;
 
@@ -42,4 +43,8 @@ public class Session extends AbstractFhirSession {
         return fluentSessionContextWrapper;
     }
 
+    @Override
+    public void setSummary(SummaryEnum theSummary) {
+
+    }
 }
