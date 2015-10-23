@@ -68,4 +68,20 @@ public class AuthorizationCodeRequestBuilder {
         return new AuthorizationCodeRequest(authEndpoints, clientId, "code", scopes, launchId,
                 redirectUri, stateProvider.getNewState());
     }
+
+    public AuthorizationCodeRequest buildStandAloneAuthorizationCodeRequest(String fhirServiceURL, String clientId,
+                                                                  String scope, String redirectUri) {
+        Validate.notNull(fhirServiceURL, "the fhirServiceURL must not be null");
+        Validate.notNull(clientId, "the clientId must not be null");
+        Validate.notNull(scope, "the scope must not be null");
+        Validate.notNull(redirectUri, "the redirectUri must not be null");
+
+        Scopes scopes = new Scopes();
+        scopes.add(new SimpleScope(scope));
+        FhirEndpoints authEndpoints = fhirEndpointsProvider.getEndpoints(fhirServiceURL);
+
+        // create authorization request
+        return new AuthorizationCodeRequest(authEndpoints, clientId, "code", scopes,
+                redirectUri, stateProvider.getNewState());
+    }
 }

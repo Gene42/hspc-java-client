@@ -32,7 +32,7 @@ public class AuthorizationCodeRequest implements org.hspconsortium.client.auth.A
     private final String clientId;
     private final String responseType;
     private final Scopes scopes;
-    private final String launchId;
+    private String launchId;
     private final String redirectUri;
     private final String oauthState;
 
@@ -43,11 +43,29 @@ public class AuthorizationCodeRequest implements org.hspconsortium.client.auth.A
                              String launchId,
                              String redirectUri,
                              String oauthState) {
+
+        this(fhirEndpoints,
+                clientId,
+                responseType,
+                scopes,
+                redirectUri,
+                oauthState);
+
+        Validate.notNull(launchId, "the launchId must not be null");
+
+        this.launchId = launchId;
+    }
+
+    AuthorizationCodeRequest(FhirEndpoints fhirEndpoints,
+                             String clientId,
+                             String responseType,
+                             Scopes scopes,
+                             String redirectUri,
+                             String oauthState) {
         Validate.notNull(fhirEndpoints, "the authorizationEndpoints must not be null");
         Validate.notNull(clientId, "the clientId must not be null");
         Validate.notNull(responseType, "the responseType must not be null");
         Validate.notNull(scopes, "the scopes must not be null");
-        Validate.notNull(launchId, "the launchId must not be null");
         Validate.notNull(redirectUri, "the redirectUri must not be null");
         Validate.notNull(oauthState, "the oauthState must not be null");
 
@@ -55,7 +73,6 @@ public class AuthorizationCodeRequest implements org.hspconsortium.client.auth.A
         this.clientId = clientId;
         this.responseType = responseType;
         this.scopes = scopes;
-        this.launchId = launchId;
         this.redirectUri = redirectUri;
         this.oauthState = oauthState;
     }
