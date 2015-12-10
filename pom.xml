@@ -75,6 +75,7 @@
         <javax.inject.version>1</javax.inject.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <nimbus-jose-jwt.version>3.9</nimbus-jose-jwt.version>
+        <slf4j.version>1.7.10</slf4j.version>
     </properties>
 
     <dependencies>
@@ -169,7 +170,16 @@
             <artifactId>nimbus-jose-jwt</artifactId>
             <version>${nimbus-jose-jwt.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
