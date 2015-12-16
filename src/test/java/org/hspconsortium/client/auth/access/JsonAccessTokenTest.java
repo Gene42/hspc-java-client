@@ -46,7 +46,8 @@ public class JsonAccessTokenTest {
                 "locationId",
                 true,
                 "resource",
-                "refreshToken"
+                "refreshToken",
+                "idToken"
         );
     }
 

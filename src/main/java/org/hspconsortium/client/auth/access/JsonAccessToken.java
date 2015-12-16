@@ -25,8 +25,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class JsonAccessToken extends AbstractOAuth2AccessToken implements AccessToken {
 
@@ -46,10 +45,14 @@ public class JsonAccessToken extends AbstractOAuth2AccessToken implements Access
 
     private final String resource;
 
+    private final String idToken;
+
+    private Map<String, Object> claimsMap = new HashMap<>();
+
     public JsonAccessToken(JsonObject rootResponse, String accessToken, String tokenType, String expires, String scope,
                            String intent, String smartStyleUrl, String patientId, String encounterId, String locationId,
-                           boolean needPatientBanner, String resource, String refreshToken) {
-        super(accessToken, tokenType, expires, scope, refreshToken);
+                           boolean needPatientBanner, String resource, String refreshToken, String idToken) {
+        super(accessToken, tokenType, expires, scope, refreshToken, idToken);
         Validate.notNull(rootResponse, "The rootResponse must not be null");
         this.rootResponse = rootResponse;
         this.intent = intent;
@@ -59,6 +62,7 @@ public class JsonAccessToken extends AbstractOAuth2AccessToken implements Access
         this.locationId = locationId;
         this.needPatientBanner = needPatientBanner;
         this.resource = resource;
+        this.idToken = idToken;
     }
 
     @Override
@@ -102,6 +106,11 @@ public class JsonAccessToken extends AbstractOAuth2AccessToken implements Access
     }
 
     @Override
+    public String getIdToken() {
+        return idToken;
+    }
+
+    @Override
     public List<NameValuePair> asNameValuePairList() {
         // create a list of all the non-null values to be transferred to the refresh token
         List<NameValuePair> nameValuePairs = new ArrayList<>();
@@ -135,5 +144,13 @@ public class JsonAccessToken extends AbstractOAuth2AccessToken implements Access
         }
 
         return nameValuePairs;
+    }
+
+    public void setClaimsMap(Map<String, Object> claimsMap) {
+        this.claimsMap = claimsMap;
+    }
+
+    public Map<String, Object> getClaimsMap() {
+        return Collections.unmodifiableMap(claimsMap);
     }
 }

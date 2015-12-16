@@ -29,8 +29,9 @@ public class FhirEndpoints implements Serializable {
     private final String fhirServiceApi;
     private final String authorizationEndpoint;
     private final String tokenEndpoint;
+    private final String userInfoEndpoint;
 
-    public FhirEndpoints(String fhirServiceApi, String authorizationEndpoint, String tokenEndpoint) {
+    public FhirEndpoints(String fhirServiceApi, String authorizationEndpoint, String tokenEndpoint, String userInfoEndpoint) {
         Validate.notNull(fhirServiceApi, "the fhirServiceApi must not be null");
         Validate.notNull(authorizationEndpoint, "the authorizationEndpoint must not be null");
         Validate.notNull(tokenEndpoint, "the tokenEndpoint must not be null");
@@ -38,6 +39,7 @@ public class FhirEndpoints implements Serializable {
         this.fhirServiceApi = fhirServiceApi;
         this.authorizationEndpoint = authorizationEndpoint;
         this.tokenEndpoint = tokenEndpoint;
+        this.userInfoEndpoint = userInfoEndpoint;
     }
 
     public String getFhirServiceApi() {
@@ -50,5 +52,9 @@ public class FhirEndpoints implements Serializable {
 
     public String getTokenEndpoint() {
         return tokenEndpoint;
+    }
+
+    public String getUserInfoEndpoint() {
+        return userInfoEndpoint;
     }
 }

@@ -40,10 +40,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hspconsortium.client.auth.access.AccessToken;
-import org.hspconsortium.client.auth.access.AccessTokenProvider;
-import org.hspconsortium.client.auth.access.AccessTokenRequest;
-import org.hspconsortium.client.auth.access.JsonAccessTokenProvider;
+import org.hspconsortium.client.auth.access.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,12 +53,13 @@ public abstract class AbstractFhirSession implements FhirSession {
     protected AccessToken accessToken;
     protected final AccessTokenRequest refreshTokenRequest;
     protected final String tokenEndpoint;
+    protected final UserInfo userInfo;
     protected IClientInterceptor clientInterceptor;
 
-    private AccessTokenProvider accessTokenProvider;
+    protected AccessTokenProvider accessTokenProvider;
 
-    public AbstractFhirSession(FhirContext hapiFhirContext, String fhirServiceApi, AccessToken accessToken, AccessTokenRequest refreshTokenRequest,
-                               String tokenEndpoint) {
+    public AbstractFhirSession(FhirContext hapiFhirContext, String fhirServiceApi, AccessToken accessToken,
+                               UserInfo userInfo, AccessTokenRequest refreshTokenRequest, String tokenEndpoint) {
         this.hapiFhirContext = hapiFhirContext;
         Validate.notNull(fhirServiceApi, "the fhirServiceApi must not be null");
         Validate.notNull(accessToken, "the accessToken must not be null");
@@ -75,6 +73,7 @@ public abstract class AbstractFhirSession implements FhirSession {
         } else {
             this.client.registerInterceptor(new AutoRefreshingBearerTokenAuthorizationHeaderInterceptor(30));
         }
+        this.userInfo = userInfo;
     }
 
     public void setAccessTokenProvider(JsonAccessTokenProvider accessTokenProvider) {
@@ -290,6 +289,8 @@ public abstract class AbstractFhirSession implements FhirSession {
     public IMeta meta() {
         return this.client.meta();
     }
+
+
 
     private class AutoRefreshingBearerTokenAuthorizationHeaderInterceptor implements IClientInterceptor {
 

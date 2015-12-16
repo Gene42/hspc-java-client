@@ -46,7 +46,7 @@ public class ClientCredentialsSessionFactoryTest {
         // note, system/*.read access is required to be added to the OpenId client
 
         String fhirServiceUrl = "http://localhost:8080/hsp-reference-api/data";
-//        String fhirServiceUrl = "https://hspc.isalusconsulting.com/dstu2/hsp-reference-api/data";
+//        String fhirServiceUrl = "https://sandbox.hspconsortium.org/dstu2/hsp-reference-api/data";
         String clientId = "test_client";
         ClientSecretCredentials clientSecretCredentials = new ClientSecretCredentials("secret");
         AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(hapiFhirContext);
@@ -56,7 +56,7 @@ public class ClientCredentialsSessionFactoryTest {
                 = new ClientCredentialsSessionFactory<>(hapiFhirContext, tokenProvider, fhirEndpointsProvider, fhirServiceUrl, clientId, clientSecretCredentials, requestedScopes);
         Session session = sessionFactory.createSession();
 
-        String patientId = "ID9995679";
+        String patientId = "COREPATIENT1";
         Patient patient = session.read().resource(Patient.class).withId(patientId).execute();
         Assert.assertNotNull(patient);
         Assert.assertEquals("HumanNameDt[family=Alexis,given=Aaron]", patient.getNameFirstRep().toString());

@@ -31,17 +31,21 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.hspconsortium.client.auth.credentials.ClientSecretCredentials;
 import org.hspconsortium.client.auth.credentials.Credentials;
 import org.hspconsortium.client.auth.credentials.JWTCredentials;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +70,15 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
         }
 
         JsonObject rootResponse = post(tokenEndpointUrl, clientId, clientSecretCredentials, paramPairs);
-        return buildAccessToken(rootResponse, null);
+        JsonAccessToken jsonAccessToken = buildAccessToken(rootResponse, null);
+
+        String idToken = jsonAccessToken.getIdToken();
+
+        if (idToken != null) {
+            processIdToken(idToken, jsonAccessToken);
+        }
+
+        return jsonAccessToken;
     }
 
     @Override
@@ -76,6 +88,16 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
 
         JsonObject rootResponse = post(tokenEndpointUrl, clientId, clientSecretCredentials, accessToken.asNameValuePairList());
         return buildAccessToken(rootResponse, new String[]{});
+    }
+
+    @Override
+    public UserInfo getUserInfo(String userInfoEndpointUrl, JsonAccessToken jsonAccessToken) {
+        HttpGet getRequest = new HttpGet(userInfoEndpointUrl);
+        getRequest.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        getRequest.addHeader("Authorization", String.format("Bearer %s", jsonAccessToken.getValue()));
+        JsonObject jsonObject = processRequest(getRequest);
+
+        return buildUserInfo(jsonObject);
     }
 
     protected JsonAccessToken buildAccessToken(JsonObject rootResponse, String[] params) {
@@ -92,7 +114,17 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
                 getResponseElement(AccessToken.LOCATION, rootResponse),
                 Boolean.parseBoolean(getResponseElement(AccessToken.NEED_PATIENT_BANNER, rootResponse)),
                 getResponseElement(AccessToken.RESOURCE, rootResponse),
-                getResponseElement(AccessToken.REFRESH_TOKEN, rootResponse)
+                getResponseElement(AccessToken.REFRESH_TOKEN, rootResponse),
+                getResponseElement(AccessToken.ID_TOKEN, rootResponse)
+        );
+    }
+
+    protected JsonUserInfo buildUserInfo(JsonObject rootResponse) {
+        return new JsonUserInfo(
+                rootResponse,
+                getResponseElement(UserInfo.SUB, rootResponse),
+                getResponseElement(UserInfo.NAME, rootResponse),
+                getResponseElement(UserInfo.PREFERRED_USERNAME, rootResponse)
         );
     }
 
@@ -118,7 +150,12 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
             throw new IllegalArgumentException("Credentials type not supported");
         }
 
-        return processRequest(postRequest, transferParams);
+        try {
+            postRequest.setEntity(new UrlEncodedFormEntity(transferParams));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        return processRequest(postRequest);
     }
 
     protected static void setAuthorizationHeader(HttpRequest request, String clientId, String clientSecret) {
@@ -127,10 +164,9 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
         request.addHeader("Authorization", String.format("Basic %s", encoded));
     }
 
-    protected JsonObject processRequest(HttpEntityEnclosingRequestBase request, List<NameValuePair> parameters) {
+    protected JsonObject processRequest(HttpUriRequest request) {
         JsonObject rootResponse = null;
         try {
-            request.setEntity(new UrlEncodedFormEntity(parameters));
             HttpResponse response = this.fhirContext.getRestfulClientFactory().getHttpClient().execute(request);
             int status = response.getStatusLine().getStatusCode();
 
@@ -162,4 +198,27 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
         return null;
     }
 
+    private void processIdToken(String idToken, JsonAccessToken jsonAccessToken) {
+        if (idToken != null) {
+            String idTokenSegments[] = idToken.split("\\.");
+
+            // todo need to id token parts
+            // todo support encryption
+
+            org.apache.commons.codec.binary.Base64 decoder = new org.apache.commons.codec.binary.Base64(true);
+            byte[] bytes0 = decoder.decode(idTokenSegments[0]);
+            String joseHeader = new String(bytes0);
+
+            byte[] bytes1 = decoder.decode(idTokenSegments[1]);
+            String claims = new String(bytes1);
+            try {
+                jsonAccessToken.setClaimsMap(new ObjectMapper().readValue(claims, HashMap.class));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            byte[] bytes2 = decoder.decode(idTokenSegments[2]);
+            String idSignature = new String(bytes2);
+        }
+    }
 }

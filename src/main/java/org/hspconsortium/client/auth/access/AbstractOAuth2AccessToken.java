@@ -34,7 +34,7 @@ abstract public class AbstractOAuth2AccessToken implements Serializable, AccessT
     protected final OAuth2AccessToken oAuth2AccessToken;
 
     public AbstractOAuth2AccessToken(String accessToken, String tokenType,
-                              String expires, String scope, String refreshToken) {
+                                     String expires, String scope, String refreshToken, final String idToken) {
         Validate.notNull(accessToken, "AccessToken must not be null");
         Validate.notNull(tokenType, "TokenType must not be null");
         Validate.notNull(expires, "Expires must not be null");
@@ -45,6 +45,9 @@ abstract public class AbstractOAuth2AccessToken implements Serializable, AccessT
         ((DefaultOAuth2AccessToken)oAuth2AccessToken).setExpiration(createExpirationDate(expires));
         ((DefaultOAuth2AccessToken)oAuth2AccessToken).setScope(createScopeSet(scope));
         ((DefaultOAuth2AccessToken)oAuth2AccessToken).setRefreshToken(new DefaultOAuth2RefreshToken(refreshToken));
+        ((DefaultOAuth2AccessToken)oAuth2AccessToken).setAdditionalInformation(
+                new HashMap<String, Object>(){{put(AccessToken.ID_TOKEN, idToken);}}
+        );
     }
 
     private Date createExpirationDate(String expiresIn) {
@@ -94,6 +97,11 @@ abstract public class AbstractOAuth2AccessToken implements Serializable, AccessT
     @Override
     public String getValue() {
         return oAuth2AccessToken.getValue();
+    }
+
+    @Override
+    public String getIdToken() {
+        return (String)(oAuth2AccessToken).getAdditionalInformation().get(AccessToken.ID_TOKEN);
     }
 
 }

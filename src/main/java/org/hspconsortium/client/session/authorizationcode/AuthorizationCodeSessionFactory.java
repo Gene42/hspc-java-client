@@ -23,6 +23,7 @@ import ca.uhn.fhir.context.FhirContext;
 import org.apache.commons.lang.Validate;
 import org.hspconsortium.client.auth.access.AccessToken;
 import org.hspconsortium.client.auth.access.AccessTokenProvider;
+import org.hspconsortium.client.auth.access.UserInfo;
 import org.hspconsortium.client.auth.authorizationcode.AuthorizationCodeRequest;
 import org.hspconsortium.client.auth.credentials.Credentials;
 import org.hspconsortium.client.session.FhirSessionContext;
@@ -87,9 +88,17 @@ public class AuthorizationCodeSessionFactory<C extends Credentials> {
         // gain an access token for use by the session
         String fhirServiceUrl = authorizationCodeRequest.getFhirEndpoints().getFhirServiceApi();
         String tokenEndpoint = authorizationCodeRequest.getFhirEndpoints().getTokenEndpoint();
+        String userInfoEndpoint = authorizationCodeRequest.getFhirEndpoints().getUserInfoEndpoint();
         AuthorizationCodeAccessTokenRequest<C> authorizationCodeAccessTokenRequest =
                 new AuthorizationCodeAccessTokenRequest<>(clientId, clientCredentials, authorizationCode, redirectUri);
         AccessToken accessToken = accessTokenProvider.getAccessToken(tokenEndpoint, authorizationCodeAccessTokenRequest);
-        return new Session(hapiFhirContext, fhirServiceUrl, accessToken);
+
+        // obtain the userInfo
+        UserInfo userInfo = null;
+        if (accessToken.getIdToken() != null) {
+            userInfo = accessTokenProvider.getUserInfo(userInfoEndpoint, accessToken);
+        }
+
+        return new Session(hapiFhirContext, fhirServiceUrl, accessToken, userInfo);
     }
 }

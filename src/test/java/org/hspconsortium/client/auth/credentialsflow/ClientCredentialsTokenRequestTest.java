@@ -162,11 +162,11 @@ public class ClientCredentialsTokenRequestTest {
 
         jwtCredentials.setIssuer("test_client_jwt");
         jwtCredentials.setSubject("test_client_jwt");
-        final String tokenProviderUrl = "https://hspc.isalusconsulting.com/dstu2/hsp-reference-authorization/token";
+        final String tokenProviderUrl = "https://sandbox.hspconsortium.org/dstu2/hsp-reference-authorization/token";
 //        final String tokenProviderUrl = "http://lpv-hdsvnev02.co.ihc.com:8080/hsp-reference-authorization/token";
 //        jwtCredentials.setAudience(tokenProviderUrl);
 //        jwtCredentials.setAudience("http://localhost:8080/hsp-reference-authorization/");
-        jwtCredentials.setAudience("https://hspc.isalusconsulting.com/dstu2/hsp-reference-authorization/token");
+        jwtCredentials.setAudience("https://sandbox.hspconsortium.org/dstu2/hsp-reference-authorization/token");
         jwtCredentials.setTokenReference(UUID.randomUUID().toString());
         jwtCredentials.setDuration(300L);
 

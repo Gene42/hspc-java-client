@@ -43,6 +43,10 @@ public class JWTCredentials implements Credentials<JWT> {
 
     private String tokenReference;
 
+    public JWTCredentials(RSAPrivateKey rsaPrivateKey) {
+        this.rsaPrivateKey = rsaPrivateKey;
+    }
+
     public String getIssuer() {
         return issuer;
     }
@@ -87,10 +91,6 @@ public class JWTCredentials implements Credentials<JWT> {
 
     public void setTokenReference(String tokenReference) {
         this.tokenReference = tokenReference;
-    }
-
-    public JWTCredentials(RSAPrivateKey rsaPrivateKey) {
-        this.rsaPrivateKey = rsaPrivateKey;
     }
 
     @Override

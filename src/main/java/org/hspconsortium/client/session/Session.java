@@ -24,18 +24,19 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import org.hspconsortium.client.auth.access.AccessToken;
 import org.hspconsortium.client.auth.access.AccessTokenRequest;
+import org.hspconsortium.client.auth.access.UserInfo;
 
 public class Session extends AbstractFhirSession {
 
     private final FluentSessionContextWrapper fluentSessionContextWrapper;
 
-    public Session(FhirContext hapiFhirContext, String fhirServiceApi, AccessToken accessToken) {
-        this(hapiFhirContext, fhirServiceApi, accessToken, null, null);
+    public Session(FhirContext hapiFhirContext, String fhirServiceApi, AccessToken accessToken, UserInfo userInfo) {
+        this(hapiFhirContext, fhirServiceApi, accessToken, userInfo, null, null);
     }
 
-    public Session(FhirContext hapiFhirContext, String fhirServiceApi, AccessToken accessToken, AccessTokenRequest refreshTokenRequest,
-                   String tokenEndpoint) {
-        super(hapiFhirContext, fhirServiceApi, accessToken, refreshTokenRequest, tokenEndpoint);
+    public Session(FhirContext hapiFhirContext, String fhirServiceApi, AccessToken accessToken, UserInfo userInfo,
+                   AccessTokenRequest refreshTokenRequest, String tokenEndpoint) {
+        super(hapiFhirContext, fhirServiceApi, accessToken, userInfo, refreshTokenRequest, tokenEndpoint);
         fluentSessionContextWrapper = new FluentSessionContextWrapper(this);
     }
 
@@ -47,4 +48,5 @@ public class Session extends AbstractFhirSession {
     public void setSummary(SummaryEnum theSummary) {
 
     }
+
 }

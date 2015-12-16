@@ -23,6 +23,7 @@ import ca.uhn.fhir.context.FhirContext;
 import org.hspconsortium.client.auth.Scopes;
 import org.hspconsortium.client.auth.access.AccessToken;
 import org.hspconsortium.client.auth.access.AccessTokenProvider;
+import org.hspconsortium.client.auth.access.UserInfo;
 import org.hspconsortium.client.auth.credentials.Credentials;
 import org.hspconsortium.client.auth.credentials.JWTCredentials;
 import org.hspconsortium.client.controller.FhirEndpointsProvider;
@@ -60,6 +61,7 @@ public class ClientCredentialsSessionFactory<C extends Credentials> {
 
     public Session createSession() {
         final String tokenEndpoint = fhirEndpointsProvider.getEndpoints(fhirServiceUrl).getTokenEndpoint();
+        final String userInfoEndpoint = fhirEndpointsProvider.getEndpoints(fhirServiceUrl).getUserInfoEndpoint();
         if (clientCredentials instanceof JWTCredentials) {
             ((JWTCredentials) clientCredentials).setAudience(tokenEndpoint);
         }
@@ -69,6 +71,13 @@ public class ClientCredentialsSessionFactory<C extends Credentials> {
         AccessToken accessToken = accessTokenProvider.getAccessToken(
                 tokenEndpoint,
                 clientCredentialsAccessTokenRequest);
-        return new Session(hapiFhirContext, fhirServiceUrl, accessToken);
+
+        // obtain the userInfo
+        UserInfo userInfo = null;
+        if (accessToken.getIdToken() != null) {
+            userInfo = accessTokenProvider.getUserInfo(userInfoEndpoint, accessToken);
+        }
+
+        return new Session(hapiFhirContext, fhirServiceUrl, accessToken, userInfo);
     }
 }

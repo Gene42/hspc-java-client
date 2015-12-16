@@ -35,6 +35,7 @@ public interface AccessToken extends OAuth2AccessToken, Serializable {
     String RESOURCE = "resource";
     String INTENT = "intent";
     String SMART_STYLE_URL = "smart_style_url";
+    String ID_TOKEN = "id_token";
 
     JsonObject getRootResponse();
 
@@ -51,6 +52,8 @@ public interface AccessToken extends OAuth2AccessToken, Serializable {
     boolean needPatientBanner();
 
     String getResource();
+
+    String getIdToken();
 
     List<NameValuePair> asNameValuePairList();
 }

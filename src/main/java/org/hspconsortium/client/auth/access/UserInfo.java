@@ -20,11 +20,24 @@
 
 package org.hspconsortium.client.auth.access;
 
-public interface AccessTokenProvider<T extends AccessToken> {
+import com.google.gson.JsonObject;
+import org.apache.http.NameValuePair;
 
-    T getAccessToken(String tokenEndpointUrl, AccessTokenRequest request);
+import java.io.Serializable;
+import java.util.List;
 
-    T refreshAccessToken(String tokenEndpointUrl, AccessTokenRequest request, AccessToken accessToken);
+public interface UserInfo extends Serializable {
+    String SUB = "sub";
+    String NAME = "name";
+    String PREFERRED_USERNAME = "preferred_username";
 
-    UserInfo getUserInfo(String tokenEndpointUrl, T t);
+    JsonObject getRootResponse();
+
+    String getSub();
+
+    String getName();
+
+    String getPreferredUsername();
+
+    List<NameValuePair> asNameValuePairList();
 }

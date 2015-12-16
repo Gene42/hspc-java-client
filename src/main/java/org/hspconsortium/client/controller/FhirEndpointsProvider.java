@@ -63,6 +63,7 @@ public interface FhirEndpointsProvider {
 
             String authEndpoint = null;
             String tokenEndpoint = null;
+            String userInfoEndpoint = null;
             for (ExtensionDt extensionDt : extensions) {
                 if(extensionDt.getUrl().equalsIgnoreCase(URIS_ENDPOINT_EXTENSION)){
                     List<ExtensionDt> urisExtensions = extensionDt.getUndeclaredExtensions();
@@ -72,11 +73,12 @@ public interface FhirEndpointsProvider {
                         }
                         else if(uriExtensionDt.getUrl().equalsIgnoreCase("token")){
                             tokenEndpoint = uriExtensionDt.getValueAsPrimitive().getValueAsString();
+                            userInfoEndpoint = tokenEndpoint.replaceFirst("token", "userinfo");
                         }
                     }
                 }
             }
-            return new FhirEndpoints(fhirServiceUrl, authEndpoint, tokenEndpoint);
+            return new FhirEndpoints(fhirServiceUrl, authEndpoint, tokenEndpoint, userInfoEndpoint);
         }
     }
 
