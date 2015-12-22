@@ -74,7 +74,7 @@ public class ClientCredentialsSessionFactory<C extends Credentials> {
 
         // obtain the userInfo
         UserInfo userInfo = null;
-        if (accessToken.getIdToken() != null) {
+        if (accessToken.getIdTokenStr() != null) {
             userInfo = accessTokenProvider.getUserInfo(userInfoEndpoint, accessToken);
         }
 

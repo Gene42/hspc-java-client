@@ -99,9 +99,12 @@ abstract public class AbstractOAuth2AccessToken implements Serializable, AccessT
         return oAuth2AccessToken.getValue();
     }
 
-    @Override
-    public String getIdToken() {
+    public String getIdTokenStr() {
         return (String)(oAuth2AccessToken).getAdditionalInformation().get(AccessToken.ID_TOKEN);
+    }
+
+    public IdToken getIdToken() {
+        return new IdToken(getIdTokenStr());
     }
 
 }

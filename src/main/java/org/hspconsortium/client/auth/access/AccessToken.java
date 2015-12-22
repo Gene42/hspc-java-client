@@ -53,7 +53,7 @@ public interface AccessToken extends OAuth2AccessToken, Serializable {
 
     String getResource();
 
-    String getIdToken();
+    String getIdTokenStr();
 
     List<NameValuePair> asNameValuePairList();
 }

@@ -91,11 +91,12 @@ public class AuthorizationCodeSessionFactory<C extends Credentials> {
         String userInfoEndpoint = authorizationCodeRequest.getFhirEndpoints().getUserInfoEndpoint();
         AuthorizationCodeAccessTokenRequest<C> authorizationCodeAccessTokenRequest =
                 new AuthorizationCodeAccessTokenRequest<>(clientId, clientCredentials, authorizationCode, redirectUri);
+
         AccessToken accessToken = accessTokenProvider.getAccessToken(tokenEndpoint, authorizationCodeAccessTokenRequest);
 
         // obtain the userInfo
         UserInfo userInfo = null;
-        if (accessToken.getIdToken() != null) {
+        if (accessToken.getIdTokenStr() != null) {
             userInfo = accessTokenProvider.getUserInfo(userInfoEndpoint, accessToken);
         }
 

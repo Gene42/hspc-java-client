@@ -36,16 +36,15 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.hspconsortium.client.auth.credentials.ClientSecretCredentials;
 import org.hspconsortium.client.auth.credentials.Credentials;
 import org.hspconsortium.client.auth.credentials.JWTCredentials;
+import org.hspconsortium.client.auth.validation.IdTokenValidator;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +54,8 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
     public JsonAccessTokenProvider(FhirContext fhirContext) {
         this.fhirContext = fhirContext;
     }
+
+    private IdTokenValidator idTokenValidator = new IdTokenValidator.Impl();
 
     @Override
     public JsonAccessToken getAccessToken(String tokenEndpointUrl, AccessTokenRequest request) {
@@ -72,10 +73,14 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
         JsonObject rootResponse = post(tokenEndpointUrl, clientId, clientSecretCredentials, paramPairs);
         JsonAccessToken jsonAccessToken = buildAccessToken(rootResponse, null);
 
-        String idToken = jsonAccessToken.getIdToken();
+        String idToken = jsonAccessToken.getIdTokenStr();
 
         if (idToken != null) {
-            processIdToken(idToken, jsonAccessToken);
+            //validate the id token
+            boolean idTokenValidationSuccess = idTokenValidator.validate(jsonAccessToken.getIdToken(), tokenEndpointUrl, clientId);
+            if (!idTokenValidationSuccess) {
+                throw new RuntimeException("IdToken is not valid");
+            }
         }
 
         return jsonAccessToken;
@@ -198,27 +203,4 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
         return null;
     }
 
-    private void processIdToken(String idToken, JsonAccessToken jsonAccessToken) {
-        if (idToken != null) {
-            String idTokenSegments[] = idToken.split("\\.");
-
-            // todo need to id token parts
-            // todo support encryption
-
-            org.apache.commons.codec.binary.Base64 decoder = new org.apache.commons.codec.binary.Base64(true);
-            byte[] bytes0 = decoder.decode(idTokenSegments[0]);
-            String joseHeader = new String(bytes0);
-
-            byte[] bytes1 = decoder.decode(idTokenSegments[1]);
-            String claims = new String(bytes1);
-            try {
-                jsonAccessToken.setClaimsMap(new ObjectMapper().readValue(claims, HashMap.class));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            byte[] bytes2 = decoder.decode(idTokenSegments[2]);
-            String idSignature = new String(bytes2);
-        }
-    }
 }
