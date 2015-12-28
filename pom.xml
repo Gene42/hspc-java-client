@@ -69,7 +69,7 @@
         <commons-io.version>2.4</commons-io.version>
         <openid.connect.client.version>1.1.13</openid.connect.client.version>
         <springframework.security.oauth.version>2.0.6.RELEASE</springframework.security.oauth.version>
-        <javax.servlet.version>3.0.1</javax.servlet.version>
+        <javax.servlet.version>3.1.0</javax.servlet.version>
         <junit.version>4.8.2</junit.version>
         <xerces.version>2.6.2-jaxb-1.0.6</xerces.version>
         <javax.inject.version>1</javax.inject.version>
