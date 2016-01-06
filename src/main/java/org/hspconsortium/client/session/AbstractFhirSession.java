@@ -286,6 +286,11 @@ public abstract class AbstractFhirSession implements FhirSession {
     }
 
     @Override
+    public <T extends IBaseResource> T fetchResourceFromUrl(Class<T> aClass, String s) {
+        return this.client.fetchResourceFromUrl(aClass, s);
+    }
+
+    @Override
     public IMeta meta() {
         return this.client.meta();
     }
