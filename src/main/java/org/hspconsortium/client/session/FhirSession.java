@@ -29,4 +29,6 @@ public interface FhirSession extends IGenericClient {
 
     AccessToken getAccessToken();
 
+    String getIdTokenProfileClaim();
+
 }

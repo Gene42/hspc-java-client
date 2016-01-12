@@ -86,6 +86,16 @@ public abstract class AbstractFhirSession implements FhirSession {
     }
 
     @Override
+    public String getIdTokenProfileClaim() {
+        AccessToken accessToken = this.getAccessToken();
+        if (accessToken instanceof JsonAccessToken) {
+            Map<String, Object> claims = ((JsonAccessToken)accessToken).getIdToken().getClaimsMap();
+            return (String)claims.get("profile");
+        }
+        return null;
+    }
+
+    @Override
     public FhirContext getFhirContext() {
         return this.hapiFhirContext;
     }

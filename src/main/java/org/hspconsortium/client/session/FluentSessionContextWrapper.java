@@ -19,6 +19,7 @@
  */
 package org.hspconsortium.client.session;
 
+import ca.uhn.fhir.model.api.IResource;
 import ca.uhn.fhir.model.dstu2.resource.Encounter;
 import ca.uhn.fhir.model.dstu2.resource.Location;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
@@ -38,6 +39,8 @@ public class FluentSessionContextWrapper {
 
     private Location priorLocation;
 
+    private IResource priorUserResource;
+
     public FluentSessionContextWrapper(Session session) {
         this.session = session;
     }
@@ -54,7 +57,7 @@ public class FluentSessionContextWrapper {
      * @return A fluent patient context
      */
     public FluentPatientContextWrapper getPatientContext() {
-        if (fluentPatientContextWrapper == null) {
+        if (fluentPatientContextWrapper == null && session.getContext().getPatientResource() != null) {
             fluentPatientContextWrapper = new FluentPatientContextWrapper(session);
         }
         return fluentPatientContextWrapper;
@@ -147,6 +150,52 @@ public class FluentSessionContextWrapper {
             priorLocation = null;
             return null;
         }
+    }
+
+    /**
+     * @return The profile for the current user, or null if there is no current user (this shouldn't happen)
+     */
+    public String getIdTokenProfileClaim() {
+        return session.getIdTokenProfileClaim();
+    }
+
+    /**
+     * @return The fhir resource corresponding to the current user.  If caching is enabled, this
+     * resource will be remembered for subsequent calls, and not loaded fresh with each call.
+     */
+    public IResource getCurrentUserResource() {
+        String profileClaim = this.getIdTokenProfileClaim();
+        if (profileClaim != null) {
+
+            String serverBase = session.getServerBase();
+            String resourceType = "";
+            String resourceId = "";
+            if (profileClaim.startsWith(serverBase)) {
+                String claim = profileClaim.substring(serverBase.length()+1);
+                String[] claimParts = claim.split("/");
+                resourceType = claimParts[0];
+                resourceId = claimParts[1];
+            }
+
+            if (enableCaching) {
+
+                // is the id matching the prior loaded location?
+                if (priorUserResource != null && priorUserResource.getId() != null) {
+                    if (resourceId.equals(priorUserResource.getId().getIdPart())) {
+                        return priorUserResource;
+                    }
+                }
+            }
+
+            if (!resourceId.isEmpty() && !resourceType.isEmpty()) {
+                priorUserResource = (IResource)session.read().resource(resourceType).withId(resourceId).execute();
+                return priorUserResource;
+            }
+        } else {
+            priorUserResource = null;
+            return null;
+        }
+        return null;
     }
 
     /**
