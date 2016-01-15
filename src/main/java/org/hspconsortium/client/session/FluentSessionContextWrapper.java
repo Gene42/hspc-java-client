@@ -41,8 +41,23 @@ public class FluentSessionContextWrapper {
 
     private IResource priorUserResource;
 
+    private boolean localizeClaimUrl = true;
+
     public FluentSessionContextWrapper(Session session) {
+        this(session, true);
+    }
+
+    public FluentSessionContextWrapper(Session session, boolean localizeClaimUrl) {
         this.session = session;
+        this.localizeClaimUrl = localizeClaimUrl;
+    }
+
+    public boolean getLocalizeClaimUrl() {
+        return localizeClaimUrl;
+    }
+
+    public void setLocalizeClaimUrl(boolean doLocalizeClaimUrl) {
+        this.localizeClaimUrl = doLocalizeClaimUrl;
     }
 
     /**
@@ -166,30 +181,25 @@ public class FluentSessionContextWrapper {
     public IResource getCurrentUserResource() {
         String profileClaim = this.getIdTokenProfileClaim();
         if (profileClaim != null) {
+            String serverBase = extractClaimServerBase(profileClaim);
+            if (localizeClaimUrl || serverBase.equalsIgnoreCase(session.getServerBase())) {
+                String[] claimParts = profileClaim.split("/");
+                String resourceType = extractClaimResource(claimParts);
+                String resourceId = extractClaimResourceId(claimParts);
 
-            String serverBase = session.getServerBase();
-            String resourceType = "";
-            String resourceId = "";
-            if (profileClaim.startsWith(serverBase)) {
-                String claim = profileClaim.substring(serverBase.length()+1);
-                String[] claimParts = claim.split("/");
-                resourceType = claimParts[0];
-                resourceId = claimParts[1];
-            }
-
-            if (enableCaching) {
-
-                // is the id matching the prior loaded location?
-                if (priorUserResource != null && priorUserResource.getId() != null) {
-                    if (resourceId.equals(priorUserResource.getId().getIdPart())) {
-                        return priorUserResource;
+                if (enableCaching) {
+                    // is the id matching the prior loaded location?
+                    if (priorUserResource != null && priorUserResource.getId() != null) {
+                        if (resourceId.equals(priorUserResource.getId().getIdPart())) {
+                            return priorUserResource;
+                        }
                     }
                 }
-            }
 
-            if (!resourceId.isEmpty() && !resourceType.isEmpty()) {
-                priorUserResource = (IResource)session.read().resource(resourceType).withId(resourceId).execute();
-                return priorUserResource;
+                if (!resourceId.isEmpty() && !resourceType.isEmpty()) {
+                    priorUserResource = (IResource) session.read().resource(resourceType).withId(resourceId).execute();
+                    return priorUserResource;
+                }
             }
         } else {
             priorUserResource = null;
@@ -198,10 +208,42 @@ public class FluentSessionContextWrapper {
         return null;
     }
 
+    private String extractClaimServerBase(String profileClaim) {
+        if (profileClaim.contains("Practitioner")) {
+            return profileClaim.substring(0, (profileClaim.indexOf("Practitioner") - 1));
+        } else {
+            throw new RuntimeException("Unsupported claim base");
+        }
+    }
+
+    private String extractClaimResource(String[] claimParts) {
+        for (String token : claimParts) {
+            if (token.equals("Practitioner")) {
+                return token;
+            }
+        }
+        throw new RuntimeException("ClaimResource not supported");
+    }
+
+    private String extractClaimResourceId(String[] claimParts) {
+        boolean returnNext = false;
+        for (String token : claimParts) {
+            if (returnNext) {
+                return token;
+            }
+            if (token.equals("Practitioner")) {
+                // return the next token
+                returnNext = true;
+            }
+        }
+        throw new RuntimeException("ClaimResource not supported");
+    }
+
     /**
      * Provides access to HAPI search() operations for rich search API
-     * @see <a href="http://jamesagnew.github.io/hapi-fhir/doc_rest_client.html">HAPI RESTful Client</a>
+     *
      * @return IUntypedQuery
+     * @see <a href="http://jamesagnew.github.io/hapi-fhir/doc_rest_client.html">HAPI RESTful Client</a>
      */
     public IUntypedQuery search() {
         return session.search();
