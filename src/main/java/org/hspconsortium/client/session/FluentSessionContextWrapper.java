@@ -211,6 +211,8 @@ public class FluentSessionContextWrapper {
     private String extractClaimServerBase(String profileClaim) {
         if (profileClaim.contains("Practitioner")) {
             return profileClaim.substring(0, (profileClaim.indexOf("Practitioner") - 1));
+        } else  if (profileClaim.contains("Patient")) {
+            return profileClaim.substring(0, (profileClaim.indexOf("Patient") - 1));
         } else {
             throw new RuntimeException("Unsupported claim base");
         }
@@ -219,6 +221,8 @@ public class FluentSessionContextWrapper {
     private String extractClaimResource(String[] claimParts) {
         for (String token : claimParts) {
             if (token.equals("Practitioner")) {
+                return token;
+            } else if (token.equals("Patient")) {
                 return token;
             }
         }
@@ -232,6 +236,9 @@ public class FluentSessionContextWrapper {
                 return token;
             }
             if (token.equals("Practitioner")) {
+                // return the next token
+                returnNext = true;
+            } else if (token.equals("Patient")) {
                 // return the next token
                 returnNext = true;
             }
