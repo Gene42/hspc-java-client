@@ -1,6 +1,6 @@
 /*
  * #%L
- * hsp-client
+ * hspc-client
  * %%
  * Copyright (C) 2014 - 2015 Healthcare Services Platform Consortium
  * %%

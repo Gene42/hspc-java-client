@@ -1,6 +1,6 @@
 /*
  * #%L
- * hsp-client
+ * hspc-client
  * %%
  * Copyright (C) 2014 - 2015 Healthcare Services Platform Consortium
  * %%
@@ -45,8 +45,8 @@ public class ClientCredentialsSessionFactoryTest {
                 .add(new SimpleScope("system/*.read"));
         // note, system/*.read access is required to be added to the OpenId client
 
-        String fhirServiceUrl = "http://localhost:8080/hsp-reference-api/data";
-//        String fhirServiceUrl = "https://sandbox.hspconsortium.org/dstu2/hsp-reference-api/data";
+        String fhirServiceUrl = "http://localhost:8080/hspc-reference-api/data";
+//        String fhirServiceUrl = "https://sandbox.hspconsortium.org/dstu2/hspc-reference-api/data";
         String clientId = "test_client";
         ClientSecretCredentials clientSecretCredentials = new ClientSecretCredentials("secret");
         AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(hapiFhirContext);
