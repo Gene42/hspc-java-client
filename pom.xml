@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.hspconsortium</groupId>
-    <artifactId>hsp-java-client</artifactId>
+    <artifactId>hspc-java-client</artifactId>
     <packaging>jar</packaging>
     <version>0.11-SNAPSHOT</version>
 
@@ -26,11 +26,11 @@
 
     <!-- HTTPS configuration -->
     <scm>
-        <url>https://travistcummings@bitbucket.org/hspconsortium/hsp-java-client</url>
-        <connection>scm:git:https://travistcummings@bitbucket.org/hspconsortium/hsp-java-client.git</connection>
-        <developerConnection>scm:git:https://travistcummings@bitbucket.org/hspconsortium/hsp-java-client.git
+        <url>https://travistcummings@bitbucket.org/hspconsortium/hspc-java-client</url>
+        <connection>scm:git:https://travistcummings@bitbucket.org/hspconsortium/hspc-java-client.git</connection>
+        <developerConnection>scm:git:https://travistcummings@bitbucket.org/hspconsortium/hspc-java-client.git
         </developerConnection>
-        <tag>hsp-java-client-0.9</tag>
+        <tag>hspc-java-client-0.9</tag>
     </scm>
 
     <developers>

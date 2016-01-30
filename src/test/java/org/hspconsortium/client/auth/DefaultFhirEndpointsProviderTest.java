@@ -1,6 +1,6 @@
 /*
  * #%L
- * hsp-client
+ * hspc-client
  * %%
  * Copyright (C) 2014 - 2015 Healthcare Services Platform Consortium
  * %%
@@ -32,7 +32,7 @@ public class DefaultFhirEndpointsProviderTest {
 
     @Test()
     public void testGetAuthorizationEndpoints(){
-        String serviceUrl = "http://localhost:8080/hsp-reference-api/data";
+        String serviceUrl = "http://localhost:8080/hspc-reference-api/data";
         FhirEndpointsProvider.Impl authEndpointsProvider = new FhirEndpointsProvider.Impl(hapiFhirContext);
         FhirEndpoints authEndpoints = authEndpointsProvider.getEndpoints(serviceUrl);
 
