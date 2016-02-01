@@ -6,8 +6,8 @@
     <packaging>jar</packaging>
     <version>0.11-SNAPSHOT</version>
 
-    <name>Health Services Platform Consortium - HSP Client</name>
-    <description>HSP Java Client Aggregator POM</description>
+    <name>Health Services Platform Consortium - HSPC Client</name>
+    <description>HSPC Java Client Aggregator POM</description>
     <url>https://healthservices.atlassian.net/wiki/display/HSPC/Healthcare+Services+Platform+Consortium</url>
 
     <organization>
