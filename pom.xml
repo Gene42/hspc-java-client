@@ -26,9 +26,9 @@
 
     <!-- HTTPS configuration -->
     <scm>
-        <url>https://travistcummings@bitbucket.org/hspconsortium/hspc-java-client</url>
-        <connection>scm:git:https://travistcummings@bitbucket.org/hspconsortium/hspc-java-client.git</connection>
-        <developerConnection>scm:git:https://travistcummings@bitbucket.org/hspconsortium/hspc-java-client.git
+        <url>https://travistcummings@bitbucket.org/hspconsortium/java-client</url>
+        <connection>scm:git:https://travistcummings@bitbucket.org/hspconsortium/java-client.git</connection>
+        <developerConnection>scm:git:https://travistcummings@bitbucket.org/hspconsortium/java-client.git
         </developerConnection>
         <tag>hspc-java-client-0.11</tag>
     </scm>
