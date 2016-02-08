@@ -23,6 +23,7 @@ package org.hspconsortium.client.session;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.api.Bundle;
 import ca.uhn.fhir.model.api.IQueryParameterType;
+import ca.uhn.fhir.model.api.IResource;
 import ca.uhn.fhir.model.base.resource.BaseConformance;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
 import ca.uhn.fhir.model.primitive.IdDt;
@@ -135,8 +136,8 @@ public abstract class AbstractFhirSession implements FhirSession {
     }
 
     @Override
-    public MethodOutcome create(IBaseResource theResource) {
-        return this.client.create(theResource);
+    public MethodOutcome create(IResource iResource) {
+        return this.client.create(iResource);
     }
 
     @Override
@@ -145,13 +146,13 @@ public abstract class AbstractFhirSession implements FhirSession {
     }
 
     @Override
-    public MethodOutcome delete(Class<? extends IBaseResource> theType, IdDt theId) {
-        return this.client.delete(theType, theId);
+    public MethodOutcome delete(Class<? extends IResource> aClass, IdDt idDt) {
+        return this.client.delete(aClass, idDt);
     }
 
     @Override
-    public MethodOutcome delete(Class<? extends IBaseResource> theType, String theId) {
-        return client.delete(theType, theId);
+    public MethodOutcome delete(Class<? extends IResource> aClass, String s) {
+        return this.client.delete(aClass, s);
     }
 
     @Override
@@ -170,13 +171,13 @@ public abstract class AbstractFhirSession implements FhirSession {
     }
 
     @Override
-    public <T extends IBaseResource> Bundle history(Class<T> theType, IdDt theId, DateTimeDt theSince, Integer theLimit) {
-        return this.client.history(theType, theId, theSince, theLimit);
+    public <T extends IResource> Bundle history(Class<T> tClass, IdDt idDt, DateTimeDt dateTimeDt, Integer integer) {
+        return this.client.history(tClass, idDt, dateTimeDt, integer);
     }
 
     @Override
-    public <T extends IBaseResource> Bundle history(Class<T> theType, String theId, DateTimeDt theSince, Integer theLimit) {
-        return client.history(theType, theId, theSince, theLimit);
+    public <T extends IResource> Bundle history(Class<T> tClass, String s, DateTimeDt dateTimeDt, Integer integer) {
+        return this.client.history(tClass, s, dateTimeDt, integer);
     }
 
     @Override
@@ -265,18 +266,18 @@ public abstract class AbstractFhirSession implements FhirSession {
     }
 
     @Override
-    public MethodOutcome update(IdDt theId, IBaseResource theResource) {
-        return this.client.update(theId, theResource);
+    public MethodOutcome update(IdDt idDt, IResource iResource) {
+        return this.client.update(idDt, iResource);
     }
 
     @Override
-    public MethodOutcome update(String theId, IBaseResource theResource) {
-        return this.client.update(theId, theResource);
+    public MethodOutcome update(String s, IResource iResource) {
+        return this.client.update(s, iResource);
     }
 
     @Override
-    public MethodOutcome validate(IBaseResource theResource) {
-        return this.client.validate(theResource);
+    public MethodOutcome validate(IResource iResource) {
+        return this.client.validate(iResource);
     }
 
     @Override
@@ -285,8 +286,8 @@ public abstract class AbstractFhirSession implements FhirSession {
     }
 
     @Override
-    public <T extends IBaseResource> T vread(Class<T> theType, IdDt theId, IdDt theVersionId) {
-        return this.client.vread(theType, theId, theVersionId);
+    public <T extends IResource> T vread(Class<T> tClass, IdDt idDt, IdDt idDt1) {
+        return this.client.vread(tClass, idDt, idDt1);
     }
 
     @Override
