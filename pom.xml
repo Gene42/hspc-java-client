@@ -30,7 +30,7 @@
         <connection>scm:git:https://travistcummings@bitbucket.org/hspconsortium/java-client.git</connection>
         <developerConnection>scm:git:https://travistcummings@bitbucket.org/hspconsortium/java-client.git
         </developerConnection>
-        <tag>java-client-0.11</tag>
+        <tag>java-client-1.0.2</tag>
     </scm>
 
     <developers>
@@ -320,7 +320,7 @@
                         <configuration>
                             <serverId>ossrh</serverId>
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -330,7 +330,7 @@
                         <configuration>
                             <autoVersionSubmodules>true</autoVersionSubmodules>
                             <useReleaseProfile>false</useReleaseProfile>
-                            <releaseProfiles>release</releaseProfiles>
+                            <!--<releaseProfiles>release</releaseProfiles>-->
                             <goals>deploy</goals>
                         </configuration>
                     </plugin>
