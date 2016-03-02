@@ -16,18 +16,6 @@
     <description>HSPC Java Client Aggregator POM</description>
     <url>https://healthservices.atlassian.net/wiki/display/HSPC/Healthcare+Services+Platform+Consortium</url>
 
-    <!-- HTTPS configuration -->
-<!--
-    <scm>
-        <url>https://travistcummings@bitbucket.org/hspconsortium/java-client</url>
-        <connection>scm:git:https://travistcummings@bitbucket.org/hspconsortium/java-client.git</connection>
-        <developerConnection>scm:git:https://travistcummings@bitbucket.org/hspconsortium/java-client.git
-        </developerConnection>
-        <tag>java-client-1.0.2</tag>
-    </scm>
--->
-
-    <!-- SSH configuration -->
     <scm>
         <connection>scm:git:ssh://git@bitbucket.org/hspconsortium/java-client.git</connection>
         <developerConnection>scm:git:ssh://git@bitbucket.org/hspconsortium/java-client.git</developerConnection>
