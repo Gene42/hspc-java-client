@@ -29,9 +29,9 @@
 
     <!-- SSH configuration -->
     <scm>
-        <connection>scm:git:ssh://git@bitbucket.org/travistcummings/java-client.git</connection>
-        <developerConnection>scm:git:ssh://git@bitbucket.org/travistcummings/java-client.git</developerConnection>
-        <url>https://bitbucket.org/travistcummings/java-client.git</url>
+        <connection>scm:git:ssh://git@bitbucket.org/hspconsortium/java-client.git</connection>
+        <developerConnection>scm:git:ssh://git@bitbucket.org/hspconsortium/java-client.git</developerConnection>
+        <url>https://bitbucket.org/hspconsortium/java-client.git</url>
         <tag>HEAD</tag>
     </scm>
 
