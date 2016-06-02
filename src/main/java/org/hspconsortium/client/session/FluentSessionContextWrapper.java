@@ -181,8 +181,12 @@ public class FluentSessionContextWrapper {
     public IResource getCurrentUserResource() {
         String profileClaim = this.getIdTokenProfileClaim();
         if (profileClaim != null) {
-            String serverBase = extractClaimServerBase(profileClaim);
-            if (localizeClaimUrl || serverBase.equalsIgnoreCase(session.getServerBase())) {
+            boolean doIt = localizeClaimUrl;
+            if (!doIt) {
+                String serverBase = extractClaimServerBase(profileClaim);
+                doIt = (serverBase != null && serverBase.equalsIgnoreCase(session.getServerBase()));
+            }
+            if (doIt) {
                 String[] claimParts = profileClaim.split("/");
                 String resourceType = extractClaimResource(claimParts);
                 String resourceId = extractClaimResourceId(claimParts);
@@ -209,13 +213,15 @@ public class FluentSessionContextWrapper {
     }
 
     private String extractClaimServerBase(String profileClaim) {
-        if (profileClaim.contains("Practitioner")) {
-            return profileClaim.substring(0, (profileClaim.indexOf("Practitioner") - 1));
-        } else  if (profileClaim.contains("Patient")) {
-            return profileClaim.substring(0, (profileClaim.indexOf("Patient") - 1));
-        } else {
-            throw new RuntimeException("Unsupported claim base");
+        try {
+            if (profileClaim.contains("Practitioner")) {
+                return profileClaim.substring(0, (profileClaim.indexOf("Practitioner") - 1));
+            } else if (profileClaim.contains("Patient")) {
+                return profileClaim.substring(0, (profileClaim.indexOf("Patient") - 1));
+            }
+        } catch (IndexOutOfBoundsException e) {
         }
+        return null;
     }
 
     private String extractClaimResource(String[] claimParts) {
