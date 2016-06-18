@@ -4,6 +4,7 @@ import org.hspconsortium.client.auth.access.IdToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -39,10 +40,29 @@ public interface IdTokenValidator {
             }
 
             // validate aud
-            String tokenAud = (String)claimsMap.get("aud");
-            if (tokenAud == null || !tokenAud.equals(clientId)) {
-                LOGGER.error("Token Aud does not match! expected [" + clientId + "] received: [" + tokenAud + "]");
-                return false;
+            Object tokenAud = claimsMap.get("aud");
+            if (tokenAud instanceof String) {
+                String tokenAudStr = (String)claimsMap.get("aud");
+                if (tokenAudStr == null || !tokenAudStr.equals(clientId)) {
+                    LOGGER.error("Token Aud does not match! expected [" + clientId + "] received: [" + tokenAud + "]");
+                    return false;
+                }
+            } else if (tokenAud instanceof ArrayList) {
+                boolean found = false;
+                ArrayList<String> tokenAudList = (ArrayList)claimsMap.get("aud");
+                StringBuilder receivedBuf = new StringBuilder();
+                for (String tokenAudStr : tokenAudList) {
+                    receivedBuf.append(tokenAudStr);
+                    receivedBuf.append(", ");
+                    if (tokenAudStr.equals(clientId)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    LOGGER.error("Token Aud does not match! expected [" + clientId + "] received: [" + receivedBuf.toString() + "]");
+                    return false;
+                }
             }
 
             // validate azp
