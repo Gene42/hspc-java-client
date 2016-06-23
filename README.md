@@ -20,7 +20,7 @@ Several guides for the HSPC Java Client are available in the [Quick Start Guide]
 
 ### Tutorials ###
 
-Several tutorials for the HSPC Java Client are available in the [Application Developers Guide](https://healthservices.atlassian.net/wiki/display/HSPC/App+Developer+Tutorials).  
+Several tutorials for the HSPC Java Client are available in the [App Developer Tutorials](https://healthservices.atlassian.net/wiki/display/HSPC/App+Developer+Tutorials).  
 
 ## Where to go from here ##
 https://healthservices.atlassian.net/wiki/display/HSPC/HSPC+Java+Client+Library
