@@ -24,7 +24,6 @@ import ca.uhn.fhir.context.FhirContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
@@ -165,7 +164,7 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
 
     protected static void setAuthorizationHeader(HttpRequest request, String clientId, String clientSecret) {
         String authHeader = String.format("%s:%s", clientId, clientSecret);
-        String encoded = Base64.encode(authHeader.getBytes());
+        String encoded = new String(org.apache.commons.codec.binary.Base64.encodeBase64(authHeader.getBytes()));
         request.addHeader("Authorization", String.format("Basic %s", encoded));
     }
 
