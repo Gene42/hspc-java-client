@@ -10,7 +10,7 @@
     <groupId>org.hspconsortium.client</groupId>
     <artifactId>hspc-java-client</artifactId>
     <packaging>jar</packaging>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4</version>
 
     <name>Health Services Platform Consortium - HSPC Client</name>
     <description>HSPC Java Client Aggregator POM</description>
@@ -20,7 +20,7 @@
         <connection>scm:git:ssh://git@bitbucket.org/hspconsortium/java-client.git</connection>
         <developerConnection>scm:git:ssh://git@bitbucket.org/hspconsortium/java-client.git</developerConnection>
         <url>https://bitbucket.org/hspconsortium/java-client.git</url>
-        <tag>HEAD</tag>
+        <tag>hspc-java-client-1.4</tag>
     </scm>
 
     <properties>
