@@ -10,5 +10,7 @@ pipelines:
           - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d
           - gpg --import private-key.gpg
           - mvn -V -B -s settings.xml deploy -P DEPLOY
-
+            # To perform a release, run these lines
+#            - mvn -B release:clean release:prepare -P DEPLOY
+#            - mvn release:perform -P DEPLOY
 
