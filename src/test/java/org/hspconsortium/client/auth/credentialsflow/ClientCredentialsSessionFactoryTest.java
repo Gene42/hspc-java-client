@@ -49,7 +49,7 @@ public class ClientCredentialsSessionFactoryTest {
 //        String fhirServiceUrl = "https://sandbox.hspconsortium.org/dstu2/hspc-reference-api/data";
         String clientId = "test_client";
         ClientSecretCredentials clientSecretCredentials = new ClientSecretCredentials("secret");
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(hapiFhirContext);
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
         FhirEndpointsProvider fhirEndpointsProvider = new FhirEndpointsProvider.Impl(hapiFhirContext);
 
         ClientCredentialsSessionFactory<ClientSecretCredentials> sessionFactory

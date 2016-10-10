@@ -20,7 +20,6 @@
 
 package org.hspconsortium.client.auth.credentialsflow;
 
-import ca.uhn.fhir.context.FhirContext;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
@@ -41,7 +40,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
@@ -50,7 +48,6 @@ import java.util.UUID;
 
 @Ignore
 public class ClientCredentialsTokenRequestTest {
-    private FhirContext hapiFhirContext = FhirContext.forDstu2();
 
     @Test
     public void testClientCredentialsAccessTokenRequest() {
@@ -61,14 +58,14 @@ public class ClientCredentialsTokenRequestTest {
 
         ClientSecretCredentials clientSecretCredentials = new ClientSecretCredentials("secret");
         ClientCredentialsAccessTokenRequest tokenRequest = new ClientCredentialsAccessTokenRequest("test_client", clientSecretCredentials, requestedScopes);
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(hapiFhirContext);
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
         AccessToken accessToken = tokenProvider.getAccessToken("http://localhost:8080/hspc-reference-authorization/token", tokenRequest);
         Assert.assertNotNull(accessToken);
         Assert.assertTrue(StringUtils.isNotBlank(accessToken.getValue()));
     }
 
     @Test
-    public void testClientJWTCredentialsAccessTokenRequest() {
+    public void testClientJWTCredentialsAccessTokenRequest() throws Exception {
         Scopes requestedScopes = new Scopes();
         requestedScopes
                 .add(new SimpleScope("launch"))
@@ -80,24 +77,9 @@ public class ClientCredentialsTokenRequestTest {
         }.getClass().getEnclosingClass();
         String fileName = currentClass.getClassLoader().getResource("openid-connect-jwks/development.only.keystore.jwks").getFile();
 
-        JWKSet jwks = null;
-        try {
-            jwks = JWKSet.load(new File(fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+        JWKSet jwks = JWKSet.load(new File(fileName));
         RSAKey rsaKey = (RSAKey) jwks.getKeys().get(0);
-        JWTCredentials jwtCredentials = null;
-        try {
-            jwtCredentials = new JWTCredentials(rsaKey.toRSAPrivateKey());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
+        JWTCredentials jwtCredentials = new JWTCredentials(rsaKey.toRSAPrivateKey());
 
         jwtCredentials.setIssuer("test_client_jwt");
         jwtCredentials.setSubject("test_client_jwt");
@@ -110,7 +92,7 @@ public class ClientCredentialsTokenRequestTest {
 
         ClientCredentialsAccessTokenRequest<JWTCredentials> tokenRequest = new ClientCredentialsAccessTokenRequest("test_client_jwt", jwtCredentials, requestedScopes);
 
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(hapiFhirContext);
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
         AccessToken accessToken = tokenProvider.getAccessToken(tokenProviderUrl, tokenRequest);
         Assert.assertNotNull(accessToken);
         Assert.assertTrue(StringUtils.isNotBlank(accessToken.getValue()));
@@ -128,7 +110,7 @@ public class ClientCredentialsTokenRequestTest {
     }
 
     @Test
-    public void testClientJWTCredentialsAccessTokenRequestBehindProxy() {
+    public void testClientJWTCredentialsAccessTokenRequestBehindProxy() throws Exception {
         Scopes requestedScopes = new Scopes();
         requestedScopes
                 .add(new SimpleScope("launch"))
@@ -141,24 +123,9 @@ public class ClientCredentialsTokenRequestTest {
         }.getClass().getEnclosingClass();
         String fileName = currentClass.getClassLoader().getResource("openid-connect-jwks/development.only.keystore.jwks").getFile();
 
-        JWKSet jwks = null;
-        try {
-            jwks = JWKSet.load(new File(fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+        JWKSet jwks = JWKSet.load(new File(fileName));
         RSAKey rsaKey = (RSAKey) jwks.getKeys().get(0);
-        JWTCredentials jwtCredentials = null;
-        try {
-            jwtCredentials = new JWTCredentials(rsaKey.toRSAPrivateKey());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
+        JWTCredentials jwtCredentials = new JWTCredentials(rsaKey.toRSAPrivateKey());
 
         jwtCredentials.setIssuer("test_client_jwt");
         jwtCredentials.setSubject("test_client_jwt");
@@ -172,7 +139,7 @@ public class ClientCredentialsTokenRequestTest {
 
         ClientCredentialsAccessTokenRequest<JWTCredentials> tokenRequest = new ClientCredentialsAccessTokenRequest("test_client_jwt", jwtCredentials, requestedScopes);
 
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(hapiFhirContext);
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
         AccessToken accessToken = tokenProvider.getAccessToken(tokenProviderUrl, tokenRequest);
         Assert.assertNotNull(accessToken);
         Assert.assertTrue(StringUtils.isNotBlank(accessToken.getValue()));
