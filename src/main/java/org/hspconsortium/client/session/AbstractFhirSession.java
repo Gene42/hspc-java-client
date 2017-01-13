@@ -27,6 +27,7 @@ import ca.uhn.fhir.model.primitive.DateTimeDt;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.model.primitive.UriDt;
 import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.api.SummaryEnum;
 import ca.uhn.fhir.rest.client.IClientInterceptor;
 import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.client.api.IHttpClient;
@@ -303,6 +304,16 @@ public abstract class AbstractFhirSession implements FhirSession {
     @Override
     public <T extends IBaseResource> T fetchResourceFromUrl(Class<T> aClass, String s) {
         return this.client.fetchResourceFromUrl(aClass, s);
+    }
+
+    @Override
+    public IPatch patch() {
+        return this.client.patch();
+    }
+
+    @Override
+    public void setSummary(SummaryEnum theSummary) {
+        this.client.setSummary(theSummary);
     }
 
     @Override
