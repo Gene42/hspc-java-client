@@ -10,7 +10,7 @@
     <groupId>org.hspconsortium.client</groupId>
     <artifactId>hspc-java-client</artifactId>
     <packaging>jar</packaging>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
 
     <name>Health Services Platform Consortium - HSPC Client</name>
     <description>HSPC Java Client Aggregator POM</description>
@@ -82,7 +82,7 @@
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-structures-dstu2</artifactId>
+            <artifactId>hapi-fhir-structures-dstu3</artifactId>
             <version>${hapi.version}</version>
         </dependency>
         <dependency>

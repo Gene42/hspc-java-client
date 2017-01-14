@@ -21,12 +21,12 @@
 package org.hspconsortium.client.controller;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.api.ExtensionDt;
-import ca.uhn.fhir.model.dstu2.resource.Conformance;
 import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.client.RestfulClientFactory;
 import ca.uhn.fhir.rest.client.exceptions.FhirClientConnectionException;
 import ca.uhn.fhir.rest.server.Constants;
+import org.hl7.fhir.dstu3.model.CapabilityStatement;
+import org.hl7.fhir.dstu3.model.Extension;
 
 import java.util.List;
 
@@ -47,27 +47,27 @@ public interface FhirEndpointsProvider {
 
         @Override
         public FhirEndpoints getEndpoints(String fhirServiceUrl) {
-            Conformance conformance;
+            CapabilityStatement capabilityStatement;
             try {
                 IGenericClient client = fhirContext.newRestfulGenericClient(fhirServiceUrl);
-                conformance = client.fetchConformance().ofType(Conformance.class).execute();
+                capabilityStatement = client.fetchConformance().ofType(CapabilityStatement.class).execute();
             } catch (FhirClientConnectionException e) {
                 throw new FhirClientConnectionException(fhirContext.getLocalizer()
                         .getMessage(RestfulClientFactory.class, "failedToRetrieveConformance", fhirServiceUrl + "/"
                                 + Constants.URL_TOKEN_METADATA), e);
             }
 
-            Conformance.Rest rest = conformance.getRest().get(0);
-            Conformance.RestSecurity restSecurity = rest.getSecurity();
-            List<ExtensionDt> extensions = restSecurity.getUndeclaredExtensions();
+            CapabilityStatement.CapabilityStatementRestComponent rest = capabilityStatement.getRest().get(0);
+            CapabilityStatement.CapabilityStatementRestSecurityComponent restSecurity = rest.getSecurity();
+            List<Extension> extensions = restSecurity.getExtension();
 
             String authEndpoint = null;
             String tokenEndpoint = null;
             String userInfoEndpoint = null;
-            for (ExtensionDt extensionDt : extensions) {
-                if(extensionDt.getUrl().equalsIgnoreCase(URIS_ENDPOINT_EXTENSION)){
-                    List<ExtensionDt> urisExtensions = extensionDt.getUndeclaredExtensions();
-                    for (ExtensionDt uriExtensionDt : urisExtensions) {
+            for (Extension extension : extensions) {
+                if(extension.getUrl().equalsIgnoreCase(URIS_ENDPOINT_EXTENSION)){
+                    List<Extension> urisExtensions = extension.getExtension();
+                    for (Extension uriExtensionDt : urisExtensions) {
                         if (uriExtensionDt.getUrl().equalsIgnoreCase("authorize")){
                             authEndpoint = uriExtensionDt.getValueAsPrimitive().getValueAsString();
                         }
