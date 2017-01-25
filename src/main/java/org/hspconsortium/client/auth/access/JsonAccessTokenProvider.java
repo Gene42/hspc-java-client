@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -182,7 +183,7 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
 
             if (response.getStatusLine().getStatusCode() != 200) {
                 HttpEntity entity = response.getEntity();
-                String responseString = EntityUtils.toString(entity, "UTF-8");
+                String responseString = EntityUtils.toString(entity, StandardCharsets.UTF_8);
                 throw new RuntimeException(String.format("There was a problem attempting to get the user info.\nResponse Status : %s .\nResponse Detail :%s."
                         , response.getStatusLine()
                         , responseString));
