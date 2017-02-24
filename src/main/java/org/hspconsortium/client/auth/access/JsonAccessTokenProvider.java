@@ -20,40 +20,45 @@
 
 package org.hspconsortium.client.auth.access;
 
-import ca.uhn.fhir.context.FhirContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.hspconsortium.client.auth.credentials.ClientSecretCredentials;
 import org.hspconsortium.client.auth.credentials.Credentials;
 import org.hspconsortium.client.auth.credentials.JWTCredentials;
 import org.hspconsortium.client.auth.validation.IdTokenValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessToken> {
-    private final FhirContext fhirContext;
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonAccessTokenProvider.class);
 
-    public JsonAccessTokenProvider(FhirContext fhirContext) {
-        this.fhirContext = fhirContext;
-    }
+//    private final FhirContext fhirContext;
+//
+//    public JsonAccessTokenProvider(FhirContext fhirContext) {
+//        this.fhirContext = fhirContext;
+//    }
 
     private IdTokenValidator idTokenValidator = new IdTokenValidator.Impl();
 
@@ -165,33 +170,37 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
 
     protected static void setAuthorizationHeader(HttpRequest request, String clientId, String clientSecret) {
         String authHeader = String.format("%s:%s", clientId, clientSecret);
-        String encoded = Base64.encode(authHeader.getBytes());
+        String encoded = new String(org.apache.commons.codec.binary.Base64.encodeBase64(authHeader.getBytes()));
         request.addHeader("Authorization", String.format("Basic %s", encoded));
     }
 
     protected JsonObject processRequest(HttpUriRequest request) {
-        JsonObject rootResponse = null;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
         try {
-            HttpResponse response = this.fhirContext.getRestfulClientFactory().getHttpClient().execute(request);
-            int status = response.getStatusLine().getStatusCode();
+            response = httpClient.execute(request);
+            System.out.println(response.getStatusLine());
 
-            if (status != 200) {
+            if (response.getStatusLine().getStatusCode() != 200) {
                 HttpEntity entity = response.getEntity();
-                String responseString = EntityUtils.toString(entity, "UTF-8");
-                throw new RuntimeException(String.format("There was a problem attempting to get the access token.\nResponse Status : %s .\nResponse Detail :%s."
+                String responseString = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+                throw new RuntimeException(String.format("There was a problem attempting to get the user info.\nResponse Status : %s .\nResponse Detail :%s."
                         , response.getStatusLine()
                         , responseString));
             }
 
-            try {
-                JsonParser parser = new JsonParser();
-                rootResponse = (JsonObject) parser.parse(new InputStreamReader(response.getEntity().getContent()));
-            } catch (IOException io_ex) {
-                throw new RuntimeException("There was a problem attempting to get the access token", io_ex);
+            JsonParser parser = new JsonParser();
+            return (JsonObject) parser.parse(new InputStreamReader(response.getEntity().getContent()));
+        } catch (IOException io_ex) {
+            throw new RuntimeException("There was a problem attempting to get the access token", io_ex);
+        } finally {
+            if (response != null) {
+                try {
+                    response.close();
+                } catch (IOException e) {
+                    LOGGER.error("Error closing response", e);
+                }
             }
-            return rootResponse;
-        } catch (IOException ioe) {
-            throw new RuntimeException("Error sending HTTP Post Payload", ioe);
         }
     }
 

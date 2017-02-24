@@ -19,12 +19,12 @@
  */
 package org.hspconsortium.client.session;
 
-import ca.uhn.fhir.model.api.Bundle;
-import ca.uhn.fhir.model.api.BundleEntry;
-import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.rest.gclient.IClientExecutable;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
 import java.lang.reflect.Field;
@@ -60,8 +60,8 @@ public class FluentPatientContextWrapper {
      * @return A list of resource matching the criterion
      */
     public <T extends IBaseResource> Collection<T> find(Class<T> clazz, ICriterion<?>... criterion) {
-        String patientId = session.getContext().getPatientResource().getId().getIdPart();
-        IQuery<Bundle> queryBuilder = session.search().forResource(clazz);
+        String patientId = session.getContext().getPatientResource().getId();
+        IQuery<ca.uhn.fhir.model.api.Bundle> queryBuilder = session.search().forResource(clazz);
 
         // use reflection to match the getPatientContext criterion
         queryBuilder.where(findPatientReferenceOnResource(clazz).hasId(patientId));
@@ -70,14 +70,14 @@ public class FluentPatientContextWrapper {
             queryBuilder = queryBuilder.and(theCriterion);
         }
 
-        Bundle results = queryBuilder.execute();
+        IClientExecutable<IQuery<Bundle>, Bundle> results = queryBuilder.returnBundle(Bundle.class);
 
-        return asCollection(results);
+        return asCollection(results.execute());
     }
 
     private <T extends IBaseResource> Collection<T> asCollection(Bundle results) {
         List<T> list = new ArrayList<>();
-        for (BundleEntry entry : results.getEntries()) {
+        for (Bundle.BundleEntryComponent entry : results.getEntry()) {
             list.add((T) entry.getResource());
         }
         return list;

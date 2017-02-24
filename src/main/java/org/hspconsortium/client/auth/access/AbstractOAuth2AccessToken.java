@@ -37,7 +37,6 @@ abstract public class AbstractOAuth2AccessToken implements Serializable, AccessT
                                      String expires, String scope, String refreshToken, final String idToken) {
         Validate.notNull(accessToken, "AccessToken must not be null");
         Validate.notNull(tokenType, "TokenType must not be null");
-        Validate.notNull(expires, "Expires must not be null");
         Validate.notNull(scope, "Scope must not be null");
 
         this.oAuth2AccessToken = new DefaultOAuth2AccessToken(accessToken);
@@ -51,7 +50,7 @@ abstract public class AbstractOAuth2AccessToken implements Serializable, AccessT
     }
 
     private Date createExpirationDate(String expiresIn) {
-        return DateUtils.addSeconds(new Date(), Integer.parseInt(expiresIn));
+        return (expiresIn == null ? null : DateUtils.addSeconds(new Date(), Integer.parseInt(expiresIn)));
     }
 
     private Set<String> createScopeSet(String scope) {

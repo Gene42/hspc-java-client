@@ -23,21 +23,22 @@ package org.hspconsortium.client.session;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.api.Bundle;
 import ca.uhn.fhir.model.api.IQueryParameterType;
-import ca.uhn.fhir.model.base.resource.BaseConformance;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.model.primitive.UriDt;
 import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.api.SummaryEnum;
 import ca.uhn.fhir.rest.client.IClientInterceptor;
 import ca.uhn.fhir.rest.client.IGenericClient;
+import ca.uhn.fhir.rest.client.api.IHttpClient;
+import ca.uhn.fhir.rest.client.api.IHttpRequest;
+import ca.uhn.fhir.rest.client.api.IHttpResponse;
 import ca.uhn.fhir.rest.client.exceptions.FhirClientConnectionException;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.rest.gclient.*;
 import ca.uhn.fhir.rest.server.EncodingEnum;
 import org.apache.commons.lang3.Validate;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hspconsortium.client.auth.access.*;
 
@@ -100,7 +101,7 @@ public abstract class AbstractFhirSession implements FhirSession {
     }
 
     @Override
-    public HttpClient getHttpClient() {
+    public IHttpClient getHttpClient() {
         return this.client.getHttpClient();
     }
 
@@ -120,7 +121,7 @@ public abstract class AbstractFhirSession implements FhirSession {
     }
 
     @Override
-    public BaseConformance conformance() {
+    public IBaseConformance conformance() {
         return this.client.conformance();
     }
 
@@ -306,6 +307,16 @@ public abstract class AbstractFhirSession implements FhirSession {
     }
 
     @Override
+    public IPatch patch() {
+        return this.client.patch();
+    }
+
+    @Override
+    public void setSummary(SummaryEnum theSummary) {
+        this.client.setSummary(theSummary);
+    }
+
+    @Override
     public IMeta meta() {
         return this.client.meta();
     }
@@ -321,15 +332,16 @@ public abstract class AbstractFhirSession implements FhirSession {
         }
 
         @Override
-        public void interceptRequest(HttpRequestBase httpRequestBase) {
+        public void interceptRequest(IHttpRequest theRequest) {
             if ((accessToken.getExpiresIn() <= refreshThreshold)) {
                 accessToken = accessTokenProvider.refreshAccessToken(tokenEndpoint, refreshTokenRequest, accessToken);
             }
-            httpRequestBase.addHeader("Authorization", String.format("Bearer %s", accessToken.getValue()));
+            theRequest.addHeader("Authorization", String.format("Bearer %s", accessToken.getValue()));
         }
 
         @Override
-        public void interceptResponse(HttpResponse response) throws IOException {
+        public void interceptResponse(IHttpResponse theResponse) throws IOException {
+
         }
 
     }

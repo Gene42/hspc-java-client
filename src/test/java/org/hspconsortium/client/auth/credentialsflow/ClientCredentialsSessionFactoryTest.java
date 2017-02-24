@@ -21,7 +21,7 @@
 package org.hspconsortium.client.auth.credentialsflow;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.dstu2.resource.Patient;
+import org.hl7.fhir.dstu3.model.Patient;
 import org.hspconsortium.client.auth.Scopes;
 import org.hspconsortium.client.auth.SimpleScope;
 import org.hspconsortium.client.auth.access.AccessTokenProvider;
@@ -36,7 +36,7 @@ import org.junit.Test;
 
 @Ignore
 public class ClientCredentialsSessionFactoryTest {
-    private FhirContext hapiFhirContext = FhirContext.forDstu2();
+    private FhirContext hapiFhirContext = FhirContext.forDstu3();
 
     @Test
     public void testClientCredentialsAccessTokenRequest() {
@@ -49,7 +49,7 @@ public class ClientCredentialsSessionFactoryTest {
 //        String fhirServiceUrl = "https://sandbox.hspconsortium.org/dstu2/hspc-reference-api/data";
         String clientId = "test_client";
         ClientSecretCredentials clientSecretCredentials = new ClientSecretCredentials("secret");
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(hapiFhirContext);
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
         FhirEndpointsProvider fhirEndpointsProvider = new FhirEndpointsProvider.Impl(hapiFhirContext);
 
         ClientCredentialsSessionFactory<ClientSecretCredentials> sessionFactory

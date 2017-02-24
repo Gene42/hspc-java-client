@@ -20,10 +20,10 @@
 package org.hspconsortium.client.session;
 
 import ca.uhn.fhir.model.api.IResource;
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
-import ca.uhn.fhir.model.dstu2.resource.Location;
-import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.rest.gclient.IUntypedQuery;
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Patient;
 
 public class FluentSessionContextWrapper {
 
@@ -89,7 +89,7 @@ public class FluentSessionContextWrapper {
             if (enableCaching) {
                 // is the id matching the prior loaded getPatientContext?
                 if (priorPatient != null && priorPatient.getId() != null) {
-                    if (patientId.equals(priorPatient.getId().getIdPart())) {
+                    if (patientId.equals(priorPatient.getId())) {
                         return priorPatient;
                     }
                 }
@@ -121,7 +121,7 @@ public class FluentSessionContextWrapper {
             if (enableCaching) {
                 // is the id matching the prior loaded encounter?
                 if (priorEncounter != null && priorEncounter.getId() != null) {
-                    if (encounterId.equals(priorEncounter.getId().getIdPart())) {
+                    if (encounterId.equals(priorEncounter.getId())) {
                         return priorEncounter;
                     }
                 }
@@ -153,7 +153,7 @@ public class FluentSessionContextWrapper {
             if (enableCaching) {
                 // is the id matching the prior loaded location?
                 if (priorLocation != null && priorLocation.getId() != null) {
-                    if (locationId.equals(priorLocation.getId().getIdPart())) {
+                    if (locationId.equals(priorLocation.getId())) {
                         return priorLocation;
                     }
                 }
@@ -194,7 +194,7 @@ public class FluentSessionContextWrapper {
                 if (enableCaching) {
                     // is the id matching the prior loaded location?
                     if (priorUserResource != null && priorUserResource.getId() != null) {
-                        if (resourceId.equals(priorUserResource.getId().getIdPart())) {
+                        if (resourceId.equals(priorUserResource.getId())) {
                             return priorUserResource;
                         }
                     }

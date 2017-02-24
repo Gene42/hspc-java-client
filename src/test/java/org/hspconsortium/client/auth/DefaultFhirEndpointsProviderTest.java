@@ -28,7 +28,7 @@ import org.junit.Test;
 
 @Ignore
 public class DefaultFhirEndpointsProviderTest {
-    private FhirContext hapiFhirContext = FhirContext.forDstu2();
+    private FhirContext hapiFhirContext = FhirContext.forDstu3();
 
     @Test()
     public void testGetAuthorizationEndpoints(){
