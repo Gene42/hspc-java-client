@@ -1,13 +1,15 @@
-# This is a sample build configuration for Maven.
+# This is a sample build configuration for Java - Maven.
+# Check our guides at https://confluence.atlassian.com/x/zd-5Mw for more examples.
 # Only use spaces to indent your .yml configuration.
 # -----
-# You can specify a custom docker image from Dockerhub as your build environment.
+# You can specify a custom docker image from Docker Hub as your build environment.
 image: maven:3.3.9-jdk-8
+
 pipelines:
   default:
     - step:
         script:
-          - echo "This script runs on all branches that don't have any specific pipeline assigned in 'branches'."
+          - mvn -V -B install
   branches:
     master:
       - step:
@@ -15,10 +17,3 @@ pipelines:
             - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d
             - gpg --import private-key.gpg
             - mvn -V -B -s settings.xml deploy -P DEPLOY
-            # To perform a release, run these lines on a configured build server
-#            - mvn -B release:clean release:prepare -P DEPLOY
-#            - mvn release:perform -P DEPLOY
-    develop:
-      - step:
-          script:
-            - echo "Run on develop branch"

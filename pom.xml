@@ -2,9 +2,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.hspconsortium.reference</groupId>
-        <artifactId>hspc-reference-release</artifactId>
-        <version>0.3</version>
+        <groupId>org.hspconsortium.release</groupId>
+        <artifactId>hspc-release</artifactId>
+        <version>0.6</version>
     </parent>
 
     <groupId>org.hspconsortium.client</groupId>
