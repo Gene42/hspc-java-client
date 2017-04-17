@@ -60,7 +60,7 @@ public class FluentPatientContextWrapper {
      * @return A list of resource matching the criterion
      */
     public <T extends IBaseResource> Collection<T> find(Class<T> clazz, ICriterion<?>... criterion) {
-        String patientId = session.getContext().getPatientResource().getId();
+        String patientId = session.getContext().getPatientResource().getIdElement().getIdPart();
         IQuery<ca.uhn.fhir.model.api.Bundle> queryBuilder = session.search().forResource(clazz);
 
         // use reflection to match the getPatientContext criterion

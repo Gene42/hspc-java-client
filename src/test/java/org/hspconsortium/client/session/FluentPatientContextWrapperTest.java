@@ -24,6 +24,7 @@ import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ca.uhn.fhir.rest.gclient.IUntypedQuery;
 import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.junit.Before;
@@ -49,6 +50,7 @@ public class FluentPatientContextWrapperTest {
     private IClientExecutable mockClientExecutable;
     private Bundle mockBundle;
     private Bundle.BundleEntryComponent mockBundleEntryConponent;
+    private IdType mockIdElement;
 
     @Before
     public void setUp() {
@@ -61,7 +63,9 @@ public class FluentPatientContextWrapperTest {
         mockClientExecutable = mock(IClientExecutable.class);
         mockBundle = mock(Bundle.class);
         mockBundleEntryConponent = mock(Bundle.BundleEntryComponent.class);
+        mockIdElement = new IdType(patientId);
 
+        when(mockPatient.getIdElement()).thenReturn(mockIdElement);
         when(mockPatient.getId()).thenReturn(patientId);
         when(mockSession.getContext()).thenReturn(mockFluentSessionContextWrapper);
         when(mockFluentSessionContextWrapper.getPatientResource()).thenReturn(mockPatient);
