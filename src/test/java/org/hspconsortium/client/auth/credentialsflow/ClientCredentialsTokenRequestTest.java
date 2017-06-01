@@ -59,7 +59,7 @@ public class ClientCredentialsTokenRequestTest {
         ClientSecretCredentials clientSecretCredentials = new ClientSecretCredentials("secret");
         ClientCredentialsAccessTokenRequest tokenRequest = new ClientCredentialsAccessTokenRequest("test_client", clientSecretCredentials, requestedScopes);
         AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
-        AccessToken accessToken = tokenProvider.getAccessToken("http://localhost:8080/hspc-reference-authorization/token", tokenRequest);
+        AccessToken accessToken = tokenProvider.getAccessToken("http://localhost:8060/token", tokenRequest);
         Assert.assertNotNull(accessToken);
         Assert.assertTrue(StringUtils.isNotBlank(accessToken.getValue()));
     }
@@ -83,10 +83,10 @@ public class ClientCredentialsTokenRequestTest {
 
         jwtCredentials.setIssuer("test_client_jwt");
         jwtCredentials.setSubject("test_client_jwt");
-//        final String tokenProviderUrl = "http://localhost:8080/hspc-reference-authorization/token";
-        final String tokenProviderUrl = "http://lpv-hdsvnev02.co.ihc.com:8080/hspc-reference-authorization/token";
+//        final String tokenProviderUrl = "http://localhost:8060/token";
+        final String tokenProviderUrl = "http://lpv-hdsvnev02.co.ihc.com:8060/token";
 
-        jwtCredentials.setAudience("http://localhost:8080/hspc-reference-authorization/token");
+        jwtCredentials.setAudience("http://localhost:8060/token");
         jwtCredentials.setTokenReference(UUID.randomUUID().toString());
         jwtCredentials.setDuration(300L);
 
@@ -130,9 +130,9 @@ public class ClientCredentialsTokenRequestTest {
         jwtCredentials.setIssuer("test_client_jwt");
         jwtCredentials.setSubject("test_client_jwt");
         final String tokenProviderUrl = "https://sandbox.hspconsortium.org/dstu2/hspc-reference-authorization/token";
-//        final String tokenProviderUrl = "http://lpv-hdsvnev02.co.ihc.com:8080/hspc-reference-authorization/token";
+//        final String tokenProviderUrl = "http://lpv-hdsvnev02.co.ihc.com:8060/token";
 //        jwtCredentials.setAudience(tokenProviderUrl);
-//        jwtCredentials.setAudience("http://localhost:8080/hspc-reference-authorization/");
+//        jwtCredentials.setAudience("http://localhost:8060/");
         jwtCredentials.setAudience("https://sandbox.hspconsortium.org/dstu2/hspc-reference-authorization/token");
         jwtCredentials.setTokenReference(UUID.randomUUID().toString());
         jwtCredentials.setDuration(300L);
