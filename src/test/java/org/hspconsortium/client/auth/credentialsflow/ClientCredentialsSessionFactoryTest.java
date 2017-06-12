@@ -21,13 +21,15 @@
 package org.hspconsortium.client.auth.credentialsflow;
 
 import ca.uhn.fhir.context.FhirContext;
-import org.hl7.fhir.dstu3.model.Patient;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 import org.hspconsortium.client.auth.Scopes;
 import org.hspconsortium.client.auth.SimpleScope;
 import org.hspconsortium.client.auth.access.AccessTokenProvider;
 import org.hspconsortium.client.auth.access.JsonAccessTokenProvider;
 import org.hspconsortium.client.auth.credentials.ClientSecretCredentials;
 import org.hspconsortium.client.controller.FhirEndpointsProvider;
+import org.hspconsortium.client.controller.FhirEndpointsProviderDSTU2;
+import org.hspconsortium.client.session.ApacheHttpClientFactory;
 import org.hspconsortium.client.session.Session;
 import org.hspconsortium.client.session.clientcredentials.ClientCredentialsSessionFactory;
 import org.junit.Assert;
@@ -36,7 +38,7 @@ import org.junit.Test;
 
 @Ignore
 public class ClientCredentialsSessionFactoryTest {
-    private FhirContext hapiFhirContext = FhirContext.forDstu3();
+    private FhirContext hapiFhirContext = FhirContext.forDstu2();
 
     @Test
     public void testClientCredentialsAccessTokenRequest() {
@@ -45,12 +47,17 @@ public class ClientCredentialsSessionFactoryTest {
                 .add(new SimpleScope("system/*.read"));
         // note, system/*.read access is required to be added to the OpenId client
 
-        String fhirServiceUrl = "http://localhost:8071/data";
+        String fhirServiceUrl = "https://api.hspconsortium.org/hspc/data";
 //        String fhirServiceUrl = "https://api.hspconsortium.org/hspc/data";
         String clientId = "test_client";
         ClientSecretCredentials clientSecretCredentials = new ClientSecretCredentials("secret");
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
-        FhirEndpointsProvider fhirEndpointsProvider = new FhirEndpointsProvider.Impl(hapiFhirContext);
+
+        ApacheHttpClientFactory apacheHttpClientFactory = new ApacheHttpClientFactory(
+                null, null, null, null,
+                10000, 10000);
+
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
+        FhirEndpointsProvider fhirEndpointsProvider = new FhirEndpointsProviderDSTU2(hapiFhirContext);
 
         ClientCredentialsSessionFactory<ClientSecretCredentials> sessionFactory
                 = new ClientCredentialsSessionFactory<>(hapiFhirContext, tokenProvider, fhirEndpointsProvider, fhirServiceUrl, clientId, clientSecretCredentials, requestedScopes);
@@ -59,6 +66,6 @@ public class ClientCredentialsSessionFactoryTest {
         String patientId = "COREPATIENT1";
         Patient patient = session.read().resource(Patient.class).withId(patientId).execute();
         Assert.assertNotNull(patient);
-        Assert.assertEquals("HumanNameDt[family=Alexis,given=Aaron]", patient.getNameFirstRep().toString());
+        Assert.assertEquals("HumanNameDt[family=Cottrill,given=Buford]", patient.getNameFirstRep().toString());
     }
 }

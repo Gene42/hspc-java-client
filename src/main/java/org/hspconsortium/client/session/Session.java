@@ -28,7 +28,9 @@ import org.hspconsortium.client.auth.access.UserInfo;
 
 public class Session extends AbstractFhirSession {
 
-    private final FluentSessionContextWrapper fluentSessionContextWrapper;
+    private final FluentSessionContextWrapperSTU3 fluentSessionContextWrapperSTU3;
+
+    private final FluentSessionContextWrapperDSTU2 fluentSessionContextWrapperDSTU2;
 
     public Session(FhirContext hapiFhirContext, String fhirServiceApi, AccessToken accessToken, UserInfo userInfo) {
         this(hapiFhirContext, fhirServiceApi, accessToken, userInfo, null, null);
@@ -37,11 +39,16 @@ public class Session extends AbstractFhirSession {
     public Session(FhirContext hapiFhirContext, String fhirServiceApi, AccessToken accessToken, UserInfo userInfo,
                    AccessTokenRequest refreshTokenRequest, String tokenEndpoint) {
         super(hapiFhirContext, fhirServiceApi, accessToken, userInfo, refreshTokenRequest, tokenEndpoint);
-        fluentSessionContextWrapper = new FluentSessionContextWrapper(this);
+        fluentSessionContextWrapperSTU3 = new FluentSessionContextWrapperSTU3(this);
+        fluentSessionContextWrapperDSTU2 = new FluentSessionContextWrapperDSTU2(this);
     }
 
-    public FluentSessionContextWrapper getContext() {
-        return fluentSessionContextWrapper;
+    public FluentSessionContextWrapperSTU3 getContextSTU3() {
+        return fluentSessionContextWrapperSTU3;
+    }
+
+    public FluentSessionContextWrapperDSTU2 getContextDSTU2() {
+        return fluentSessionContextWrapperDSTU2;
     }
 
     @Override

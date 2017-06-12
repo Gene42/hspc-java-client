@@ -21,19 +21,19 @@ package org.hspconsortium.client.auth;
 
 import ca.uhn.fhir.context.FhirContext;
 import org.hspconsortium.client.controller.FhirEndpoints;
-import org.hspconsortium.client.controller.FhirEndpointsProvider;
+import org.hspconsortium.client.controller.FhirEndpointsProviderSTU3;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 @Ignore
-public class DefaultFhirEndpointsProviderTest {
+public class DefaultFhirEndpointsProviderSTU3Test {
     private FhirContext hapiFhirContext = FhirContext.forDstu3();
 
     @Test()
     public void testGetAuthorizationEndpoints(){
         String serviceUrl = "http://localhost:8071/data";
-        FhirEndpointsProvider.Impl authEndpointsProvider = new FhirEndpointsProvider.Impl(hapiFhirContext);
+        FhirEndpointsProviderSTU3 authEndpointsProvider = new FhirEndpointsProviderSTU3(hapiFhirContext);
         FhirEndpoints authEndpoints = authEndpointsProvider.getEndpoints(serviceUrl);
 
         Assert.assertNotNull(authEndpoints);

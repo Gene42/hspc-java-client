@@ -33,13 +33,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.hspconsortium.client.auth.credentials.ClientSecretCredentials;
 import org.hspconsortium.client.auth.credentials.Credentials;
 import org.hspconsortium.client.auth.credentials.JWTCredentials;
 import org.hspconsortium.client.auth.validation.IdTokenValidator;
+import org.hspconsortium.client.session.ApacheHttpClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,11 +54,11 @@ import java.util.Map;
 public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessToken> {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonAccessTokenProvider.class);
 
-//    private final FhirContext fhirContext;
-//
-//    public JsonAccessTokenProvider(FhirContext fhirContext) {
-//        this.fhirContext = fhirContext;
-//    }
+    private ApacheHttpClientFactory apacheHttpClientFactory;
+
+    public JsonAccessTokenProvider(ApacheHttpClientFactory apacheHttpClientFactory) {
+        this.apacheHttpClientFactory = apacheHttpClientFactory;
+    }
 
     private IdTokenValidator idTokenValidator = new IdTokenValidator.Impl();
 
@@ -175,7 +175,7 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
     }
 
     protected JsonObject processRequest(HttpUriRequest request) {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpClient httpClient = apacheHttpClientFactory.getClient();
         CloseableHttpResponse response = null;
         try {
             response = httpClient.execute(request);

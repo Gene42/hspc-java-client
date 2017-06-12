@@ -20,16 +20,16 @@
 package org.hspconsortium.client.session;
 
 import ca.uhn.fhir.model.api.IResource;
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Location;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.rest.gclient.IUntypedQuery;
-import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.Location;
-import org.hl7.fhir.dstu3.model.Patient;
 
-public class FluentSessionContextWrapper {
+public class FluentSessionContextWrapperDSTU2 {
 
     protected Session session;
 
-    protected FluentPatientContextWrapper fluentPatientContextWrapper;
+    protected FluentPatientContextWrapperSTU3 fluentPatientContextWrapperSTU3;
 
     protected boolean enableCaching = true;
 
@@ -43,11 +43,11 @@ public class FluentSessionContextWrapper {
 
     private boolean localizeClaimUrl = true;
 
-    public FluentSessionContextWrapper(Session session) {
+    public FluentSessionContextWrapperDSTU2(Session session) {
         this(session, true);
     }
 
-    public FluentSessionContextWrapper(Session session, boolean localizeClaimUrl) {
+    public FluentSessionContextWrapperDSTU2(Session session, boolean localizeClaimUrl) {
         this.session = session;
         this.localizeClaimUrl = localizeClaimUrl;
     }
@@ -71,11 +71,11 @@ public class FluentSessionContextWrapper {
     /**
      * @return A fluent patient context
      */
-    public FluentPatientContextWrapper getPatientContext() {
-        if (fluentPatientContextWrapper == null && session.getContext().getPatientResource() != null) {
-            fluentPatientContextWrapper = new FluentPatientContextWrapper(session);
+    public FluentPatientContextWrapperSTU3 getPatientContext() {
+        if (fluentPatientContextWrapperSTU3 == null && session.getContextSTU3().getPatientResource() != null) {
+            fluentPatientContextWrapperSTU3 = new FluentPatientContextWrapperSTU3(session);
         }
-        return fluentPatientContextWrapper;
+        return fluentPatientContextWrapperSTU3;
     }
 
     /**
@@ -263,8 +263,8 @@ public class FluentSessionContextWrapper {
     }
 
     /**
-     * Caching allows the session getContext to remember values previously accessed in the session.
-     * This helps with repeated calls to the getPatientContext, encounter, or location getContext.
+     * Caching allows the session getContextSTU3 to remember values previously accessed in the session.
+     * This helps with repeated calls to the getPatientContext, encounter, or location getContextSTU3.
      * However, changes to the object, either inside or outside the session, are not visible to
      * the cached version.
      *

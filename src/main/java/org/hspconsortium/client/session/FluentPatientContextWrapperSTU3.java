@@ -32,13 +32,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class FluentPatientContextWrapper {
+public class FluentPatientContextWrapperSTU3 {
 
     private Session session;
 
-    public FluentPatientContextWrapper(Session session) {
+    public FluentPatientContextWrapperSTU3(Session session) {
         this.session = session;
-        if (session.getContext().getPatientResource() == null) {
+        if (session.getContextSTU3().getPatientResource() == null) {
             throw new RuntimeException("Cannot have PatientContextWrapper without Patient");
         }
     }
@@ -48,7 +48,7 @@ public class FluentPatientContextWrapper {
      * @return Patient resource
      */
     public Patient get() {
-        return session.getContext().getPatientResource();
+        return session.getContextSTU3().getPatientResource();
     }
 
     /**
@@ -60,7 +60,7 @@ public class FluentPatientContextWrapper {
      * @return A list of resource matching the criterion
      */
     public <T extends IBaseResource> Collection<T> find(Class<T> clazz, ICriterion<?>... criterion) {
-        String patientId = session.getContext().getPatientResource().getIdElement().getIdPart();
+        String patientId = session.getContextSTU3().getPatientResource().getIdElement().getIdPart();
         IQuery<ca.uhn.fhir.model.api.Bundle> queryBuilder = session.search().forResource(clazz);
 
         // use reflection to match the getPatientContext criterion

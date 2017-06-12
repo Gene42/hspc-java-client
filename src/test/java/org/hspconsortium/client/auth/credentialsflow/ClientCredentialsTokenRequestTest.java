@@ -34,6 +34,7 @@ import org.hspconsortium.client.auth.access.AccessTokenProvider;
 import org.hspconsortium.client.auth.access.JsonAccessTokenProvider;
 import org.hspconsortium.client.auth.credentials.ClientSecretCredentials;
 import org.hspconsortium.client.auth.credentials.JWTCredentials;
+import org.hspconsortium.client.session.ApacheHttpClientFactory;
 import org.hspconsortium.client.session.clientcredentials.ClientCredentialsAccessTokenRequest;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -49,6 +50,10 @@ import java.util.UUID;
 @Ignore
 public class ClientCredentialsTokenRequestTest {
 
+    ApacheHttpClientFactory apacheHttpClientFactory = new ApacheHttpClientFactory(
+            null, null, null, null,
+            10000, 10000);
+
     @Test
     public void testClientCredentialsAccessTokenRequest() {
         Scopes requestedScopes = new Scopes();
@@ -58,8 +63,8 @@ public class ClientCredentialsTokenRequestTest {
 
         ClientSecretCredentials clientSecretCredentials = new ClientSecretCredentials("secret");
         ClientCredentialsAccessTokenRequest tokenRequest = new ClientCredentialsAccessTokenRequest("test_client", clientSecretCredentials, requestedScopes);
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
-        AccessToken accessToken = tokenProvider.getAccessToken("http://localhost:8060/token", tokenRequest);
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
+        AccessToken accessToken = tokenProvider.getAccessToken("https://auth.hspconsortium.org//token", tokenRequest);
         Assert.assertNotNull(accessToken);
         Assert.assertTrue(StringUtils.isNotBlank(accessToken.getValue()));
     }
@@ -83,16 +88,16 @@ public class ClientCredentialsTokenRequestTest {
 
         jwtCredentials.setIssuer("test_client_jwt");
         jwtCredentials.setSubject("test_client_jwt");
-//        final String tokenProviderUrl = "http://localhost:8060/token";
-        final String tokenProviderUrl = "http://lpv-hdsvnev02.co.ihc.com:8060/token";
+        final String tokenProviderUrl = "https://auth.hspconsortium.org/token";
+//        final String tokenProviderUrl = "http://lpv-hdsvnev02.co.ihc.com:8060/token";
 
-        jwtCredentials.setAudience("http://localhost:8060/token");
+        jwtCredentials.setAudience("http://auth.hspconsortium.org/token");
         jwtCredentials.setTokenReference(UUID.randomUUID().toString());
         jwtCredentials.setDuration(300L);
 
         ClientCredentialsAccessTokenRequest<JWTCredentials> tokenRequest = new ClientCredentialsAccessTokenRequest("test_client_jwt", jwtCredentials, requestedScopes);
 
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
         AccessToken accessToken = tokenProvider.getAccessToken(tokenProviderUrl, tokenRequest);
         Assert.assertNotNull(accessToken);
         Assert.assertTrue(StringUtils.isNotBlank(accessToken.getValue()));
@@ -129,17 +134,17 @@ public class ClientCredentialsTokenRequestTest {
 
         jwtCredentials.setIssuer("test_client_jwt");
         jwtCredentials.setSubject("test_client_jwt");
-        final String tokenProviderUrl = "https://sandbox.hspconsortium.org/dstu2/hspc-reference-authorization/token";
+        final String tokenProviderUrl = "https://auth.hspconsortium.org/token";
 //        final String tokenProviderUrl = "http://lpv-hdsvnev02.co.ihc.com:8060/token";
 //        jwtCredentials.setAudience(tokenProviderUrl);
 //        jwtCredentials.setAudience("http://localhost:8060/");
-        jwtCredentials.setAudience("https://sandbox.hspconsortium.org/dstu2/hspc-reference-authorization/token");
+        jwtCredentials.setAudience("https://auth.hspconsortium.org/token");
         jwtCredentials.setTokenReference(UUID.randomUUID().toString());
         jwtCredentials.setDuration(300L);
 
         ClientCredentialsAccessTokenRequest<JWTCredentials> tokenRequest = new ClientCredentialsAccessTokenRequest("test_client_jwt", jwtCredentials, requestedScopes);
 
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
         AccessToken accessToken = tokenProvider.getAccessToken(tokenProviderUrl, tokenRequest);
         Assert.assertNotNull(accessToken);
         Assert.assertTrue(StringUtils.isNotBlank(accessToken.getValue()));

@@ -38,10 +38,10 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FluentPatientContextWrapperTest {
+public class FluentPatientContextWrapperSTU3Test {
 
     private Session mockSession;
-    private FluentSessionContextWrapper mockFluentSessionContextWrapper;
+    private FluentSessionContextWrapperSTU3 mockFluentSessionContextWrapperSTU3;
     private Patient mockPatient;
     private String patientId = "patientId";
     private Observation mockObservation;
@@ -55,7 +55,7 @@ public class FluentPatientContextWrapperTest {
     @Before
     public void setUp() {
         mockSession = mock(Session.class);
-        mockFluentSessionContextWrapper = mock(FluentSessionContextWrapper.class);
+        mockFluentSessionContextWrapperSTU3 = mock(FluentSessionContextWrapperSTU3.class);
         mockPatient = mock(Patient.class);
         mockObservation = mock(Observation.class);
         mockUntypedQuery = mock(IUntypedQuery.class);
@@ -67,8 +67,8 @@ public class FluentPatientContextWrapperTest {
 
         when(mockPatient.getIdElement()).thenReturn(mockIdElement);
         when(mockPatient.getId()).thenReturn(patientId);
-        when(mockSession.getContext()).thenReturn(mockFluentSessionContextWrapper);
-        when(mockFluentSessionContextWrapper.getPatientResource()).thenReturn(mockPatient);
+        when(mockSession.getContextSTU3()).thenReturn(mockFluentSessionContextWrapperSTU3);
+        when(mockFluentSessionContextWrapperSTU3.getPatientResource()).thenReturn(mockPatient);
         when(mockSession.search()).thenReturn(mockUntypedQuery);
         when(mockUntypedQuery.forResource((any(Class.class)))).thenReturn(mockQuery);
         when(mockQuery.and(any(ICriterion.class))).thenReturn(mockQuery);
@@ -83,24 +83,24 @@ public class FluentPatientContextWrapperTest {
 
     @Test
     public void testGet() {
-        FluentPatientContextWrapper fluentPatientContextWrapper = new FluentPatientContextWrapper(mockSession);
+        FluentPatientContextWrapperSTU3 fluentPatientContextWrapperSTU3 = new FluentPatientContextWrapperSTU3(mockSession);
 
-        assertEquals(mockPatient, fluentPatientContextWrapper.get());
+        assertEquals(mockPatient, fluentPatientContextWrapperSTU3.get());
     }
 
     @Test
     public void testFindNoParams() {
-        FluentPatientContextWrapper fluentPatientContextWrapper = new FluentPatientContextWrapper(mockSession);
+        FluentPatientContextWrapperSTU3 fluentPatientContextWrapperSTU3 = new FluentPatientContextWrapperSTU3(mockSession);
 
-        assertEquals(mockObservation, fluentPatientContextWrapper.find(Observation.class).iterator().next());
+        assertEquals(mockObservation, fluentPatientContextWrapperSTU3.find(Observation.class).iterator().next());
     }
 
     @Test
     public void testFindWithParams() {
-        FluentPatientContextWrapper fluentPatientContextWrapper = new FluentPatientContextWrapper(mockSession);
+        FluentPatientContextWrapperSTU3 fluentPatientContextWrapperSTU3 = new FluentPatientContextWrapperSTU3(mockSession);
 
         assertEquals(mockObservation,
-                fluentPatientContextWrapper
+                fluentPatientContextWrapperSTU3
                         .find(Observation.class, Observation.CODE.exactly().identifier("8302-2"))
                         .iterator().next());
     }
