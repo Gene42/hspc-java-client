@@ -11,7 +11,7 @@ Add this entry to your pom.xml
     <dependency>
       <groupId>org.hspconsortium</groupId>
       <artifactId>hspc-java-client</artifactId>
-      <version>1.2</version>
+      <version>1.6.0</version>
     </dependency>
 
 ### Guides ###
