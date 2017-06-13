@@ -51,13 +51,14 @@ public class ClientCredentialsSessionFactoryTest {
 //        String fhirServiceUrl = "https://api.hspconsortium.org/hspc/data";
         String clientId = "test_client";
         ClientSecretCredentials clientSecretCredentials = new ClientSecretCredentials("secret");
+//        ApacheHttpClientFactory apacheHttpClientFactory = new ApacheHttpClientFactory(
+//                null, null, null, null,
+//                10000, 10000);
 
-        ApacheHttpClientFactory apacheHttpClientFactory = new ApacheHttpClientFactory(
-                null, null, null, null,
-                10000, 10000);
-
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
         FhirEndpointsProvider fhirEndpointsProvider = new FhirEndpointsProviderDSTU2(hapiFhirContext);
+//        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
+//        FhirEndpointsProvider fhirEndpointsProvider = new FhirEndpointsProviderDSTU2(hapiFhirContext);
 
         ClientCredentialsSessionFactory<ClientSecretCredentials> sessionFactory
                 = new ClientCredentialsSessionFactory<>(hapiFhirContext, tokenProvider, fhirEndpointsProvider, fhirServiceUrl, clientId, clientSecretCredentials, requestedScopes);

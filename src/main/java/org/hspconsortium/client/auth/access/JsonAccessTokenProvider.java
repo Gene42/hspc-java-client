@@ -33,6 +33,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.hspconsortium.client.auth.credentials.ClientSecretCredentials;
@@ -54,12 +55,12 @@ import java.util.Map;
 public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessToken> {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonAccessTokenProvider.class);
 
-    private ApacheHttpClientFactory apacheHttpClientFactory;
-
-    public JsonAccessTokenProvider(ApacheHttpClientFactory apacheHttpClientFactory) {
-        this.apacheHttpClientFactory = apacheHttpClientFactory;
-    }
-
+//    private ApacheHttpClientFactory apacheHttpClientFactory;
+//
+//    public JsonAccessTokenProvider(ApacheHttpClientFactory apacheHttpClientFactory) {
+//        this.apacheHttpClientFactory = apacheHttpClientFactory;
+//    }
+//
     private IdTokenValidator idTokenValidator = new IdTokenValidator.Impl();
 
     @Override
@@ -175,7 +176,8 @@ public class JsonAccessTokenProvider implements AccessTokenProvider<JsonAccessTo
     }
 
     protected JsonObject processRequest(HttpUriRequest request) {
-        CloseableHttpClient httpClient = apacheHttpClientFactory.getClient();
+//        CloseableHttpClient httpClient = apacheHttpClientFactory.getClient();
+        CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
         try {
             response = httpClient.execute(request);
