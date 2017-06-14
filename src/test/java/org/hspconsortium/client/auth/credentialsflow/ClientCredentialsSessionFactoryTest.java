@@ -29,6 +29,7 @@ import org.hspconsortium.client.auth.access.JsonAccessTokenProvider;
 import org.hspconsortium.client.auth.credentials.ClientSecretCredentials;
 import org.hspconsortium.client.controller.FhirEndpointsProvider;
 import org.hspconsortium.client.controller.FhirEndpointsProviderDSTU2;
+import org.hspconsortium.client.session.ApacheHttpClientFactory;
 import org.hspconsortium.client.session.Session;
 import org.hspconsortium.client.session.clientcredentials.ClientCredentialsSessionFactory;
 import org.junit.Assert;
@@ -47,17 +48,15 @@ public class ClientCredentialsSessionFactoryTest {
         // note, system/*.read access is required to be added to the OpenId client
 
         String fhirServiceUrl = "https://api.hspconsortium.org/hspc/data";
-//        String fhirServiceUrl = "https://api.hspconsortium.org/hspc/data";
         String clientId = "test_client";
         ClientSecretCredentials clientSecretCredentials = new ClientSecretCredentials("secret");
-//        ApacheHttpClientFactory apacheHttpClientFactory = new ApacheHttpClientFactory(
-//                null, null, null, null,
-//                10000, 10000);
 
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
+        ApacheHttpClientFactory apacheHttpClientFactory = new ApacheHttpClientFactory(
+                null, null, null, null,
+                10000, 10000);
+
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
         FhirEndpointsProvider fhirEndpointsProvider = new FhirEndpointsProviderDSTU2(hapiFhirContext);
-//        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
-//        FhirEndpointsProvider fhirEndpointsProvider = new FhirEndpointsProviderDSTU2(hapiFhirContext);
 
         ClientCredentialsSessionFactory<ClientSecretCredentials> sessionFactory
                 = new ClientCredentialsSessionFactory<>(hapiFhirContext, tokenProvider, fhirEndpointsProvider, fhirServiceUrl, clientId, clientSecretCredentials, requestedScopes);

@@ -50,9 +50,9 @@ import java.util.UUID;
 @Ignore
 public class ClientCredentialsTokenRequestTest {
 
-//    ApacheHttpClientFactory apacheHttpClientFactory = new ApacheHttpClientFactory(
-//            null, null, null, null,
-//            10000, 10000);
+    ApacheHttpClientFactory apacheHttpClientFactory = new ApacheHttpClientFactory(
+            null, null, null, null,
+            10000, 10000);
 
     @Test
     public void testClientCredentialsAccessTokenRequest() {
@@ -63,10 +63,8 @@ public class ClientCredentialsTokenRequestTest {
 
         ClientSecretCredentials clientSecretCredentials = new ClientSecretCredentials("secret");
         ClientCredentialsAccessTokenRequest tokenRequest = new ClientCredentialsAccessTokenRequest("test_client", clientSecretCredentials, requestedScopes);
-//        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
-//        AccessToken accessToken = tokenProvider.getAccessToken("https://auth.hspconsortium.org//token", tokenRequest);
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
-        AccessToken accessToken = tokenProvider.getAccessToken("http://localhost:8060/token", tokenRequest);
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
+        AccessToken accessToken = tokenProvider.getAccessToken("https://auth.hspconsortium.org//token", tokenRequest);
         Assert.assertNotNull(accessToken);
         Assert.assertTrue(StringUtils.isNotBlank(accessToken.getValue()));
     }
@@ -99,8 +97,7 @@ public class ClientCredentialsTokenRequestTest {
 
         ClientCredentialsAccessTokenRequest<JWTCredentials> tokenRequest = new ClientCredentialsAccessTokenRequest("test_client_jwt", jwtCredentials, requestedScopes);
 
-//        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
         AccessToken accessToken = tokenProvider.getAccessToken(tokenProviderUrl, tokenRequest);
         Assert.assertNotNull(accessToken);
         Assert.assertTrue(StringUtils.isNotBlank(accessToken.getValue()));
@@ -147,8 +144,7 @@ public class ClientCredentialsTokenRequestTest {
 
         ClientCredentialsAccessTokenRequest<JWTCredentials> tokenRequest = new ClientCredentialsAccessTokenRequest("test_client_jwt", jwtCredentials, requestedScopes);
 
-//        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
-        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider();
+        AccessTokenProvider tokenProvider = new JsonAccessTokenProvider(apacheHttpClientFactory);
         AccessToken accessToken = tokenProvider.getAccessToken(tokenProviderUrl, tokenRequest);
         Assert.assertNotNull(accessToken);
         Assert.assertTrue(StringUtils.isNotBlank(accessToken.getValue()));
