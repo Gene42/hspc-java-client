@@ -29,7 +29,6 @@ import org.hspconsortium.client.auth.access.JsonAccessTokenProvider;
 import org.hspconsortium.client.auth.credentials.ClientSecretCredentials;
 import org.hspconsortium.client.controller.FhirEndpointsProvider;
 import org.hspconsortium.client.controller.FhirEndpointsProviderDSTU2;
-import org.hspconsortium.client.session.ApacheHttpClientFactory;
 import org.hspconsortium.client.session.Session;
 import org.hspconsortium.client.session.clientcredentials.ClientCredentialsSessionFactory;
 import org.junit.Assert;
