@@ -28,9 +28,9 @@ import org.hspconsortium.client.auth.access.UserInfo;
 
 public class Session extends AbstractFhirSession {
 
-    private final FluentSessionContextWrapperSTU3 fluentSessionContextWrapperSTU3;
+    private final SessionContextWrapperSTU3 sessionContextWrapperSTU3;
 
-    private final FluentSessionContextWrapperDSTU2 fluentSessionContextWrapperDSTU2;
+    private final SessionContextWrapperDSTU2 sessionContextWrapperDSTU2;
 
     public Session(FhirContext hapiFhirContext, String fhirServiceApi, AccessToken accessToken, UserInfo userInfo) {
         this(hapiFhirContext, fhirServiceApi, accessToken, userInfo, null, null);
@@ -39,16 +39,16 @@ public class Session extends AbstractFhirSession {
     public Session(FhirContext hapiFhirContext, String fhirServiceApi, AccessToken accessToken, UserInfo userInfo,
                    AccessTokenRequest refreshTokenRequest, String tokenEndpoint) {
         super(hapiFhirContext, fhirServiceApi, accessToken, userInfo, refreshTokenRequest, tokenEndpoint);
-        fluentSessionContextWrapperSTU3 = new FluentSessionContextWrapperSTU3(this);
-        fluentSessionContextWrapperDSTU2 = new FluentSessionContextWrapperDSTU2(this);
+        sessionContextWrapperSTU3 = new SessionContextWrapperSTU3(this);
+        sessionContextWrapperDSTU2 = new SessionContextWrapperDSTU2(this);
     }
 
-    public FluentSessionContextWrapperSTU3 getContextSTU3() {
-        return fluentSessionContextWrapperSTU3;
+    public SessionContextWrapperSTU3 getContextSTU3() {
+        return sessionContextWrapperSTU3;
     }
 
-    public FluentSessionContextWrapperDSTU2 getContextDSTU2() {
-        return fluentSessionContextWrapperDSTU2;
+    public SessionContextWrapperDSTU2 getContextDSTU2() {
+        return sessionContextWrapperDSTU2;
     }
 
     @Override
