@@ -29,7 +29,7 @@ public class SessionContextWrapperDSTU2 {
 
     protected Session session;
 
-    protected PatientContextWrapperSTU3 patientContextWrapperSTU3;
+    protected PatientContextWrapperDSTU2 patientContextWrapperDSTU2;
 
     protected boolean enableCaching = true;
 
@@ -71,11 +71,11 @@ public class SessionContextWrapperDSTU2 {
     /**
      * @return A patient context
      */
-    public PatientContextWrapperSTU3 getPatientContext() {
-        if (patientContextWrapperSTU3 == null && session.getContextSTU3().getPatientResource() != null) {
-            patientContextWrapperSTU3 = new PatientContextWrapperSTU3(session);
+    public PatientContextWrapperDSTU2 getPatientContext() {
+        if (patientContextWrapperDSTU2 == null && session.getContextDSTU2().getPatientResource() != null) {
+            patientContextWrapperDSTU2 = new PatientContextWrapperDSTU2(session);
         }
-        return patientContextWrapperSTU3;
+        return patientContextWrapperDSTU2;
     }
 
     /**
@@ -263,8 +263,8 @@ public class SessionContextWrapperDSTU2 {
     }
 
     /**
-     * Caching allows the session getContextSTU3 to remember values previously accessed in the session.
-     * This helps with repeated calls to the getPatientContext, encounter, or location getContextSTU3.
+     * Caching allows the session getContextDSTU2 to remember values previously accessed in the session.
+     * This helps with repeated calls to the getPatientContext, encounter, or location getContextDSTU2.
      * However, changes to the object, either inside or outside the session, are not visible to
      * the cached version.
      *
