@@ -32,8 +32,8 @@ import java.util.Map;
 
 public class AuthorizationCodeRequestBuilder {
 
-    static final String ISSUER_PARAMETER = "iss";
-    static final String LAUNCH_ID_PARAMETER = "launch";
+    private static final String ISSUER_PARAMETER = "iss";
+    private static final String LAUNCH_ID_PARAMETER = "launch";
 
     private FhirEndpointsProvider fhirEndpointsProvider;
     private StateProvider stateProvider;
@@ -46,7 +46,10 @@ public class AuthorizationCodeRequestBuilder {
     public AuthorizationCodeRequest buildAuthorizationCodeRequest(HttpServletRequest request, String clientId,
                                                                   String scope, String redirectUri) {
         Map paramMap = request.getParameterMap();
-        String launchId = ((String[]) paramMap.get(LAUNCH_ID_PARAMETER))[0];
+        String launchId = null;
+        if (paramMap.containsKey(LAUNCH_ID_PARAMETER)) {
+             launchId = ((String[]) paramMap.get(LAUNCH_ID_PARAMETER))[0];
+        }
         String fhirServiceURL = ((String[]) paramMap.get(ISSUER_PARAMETER))[0];
 
         return buildAuthorizationCodeRequest(fhirServiceURL, launchId, clientId, scope, redirectUri);
@@ -54,7 +57,6 @@ public class AuthorizationCodeRequestBuilder {
 
     public AuthorizationCodeRequest buildAuthorizationCodeRequest(String fhirServiceURL, String launchId, String clientId,
                                                                   String scope, String redirectUri) {
-        Validate.notNull(launchId, "the launchId must not be null");
         Validate.notNull(fhirServiceURL, "the fhirServiceURL must not be null");
         Validate.notNull(clientId, "the clientId must not be null");
         Validate.notNull(scope, "the scope must not be null");

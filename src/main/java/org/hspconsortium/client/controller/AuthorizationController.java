@@ -87,15 +87,26 @@ public class AuthorizationController<C extends Credentials> {
 
         // build the response redirect
         response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
-        response.setHeader("Location", authorizationCodeRequest.getFhirEndpoints().getAuthorizationEndpoint() +
-                        "?client_id=" + authorizationCodeRequest.getClientId() +
-                        "&response_type=" + authorizationCodeRequest.getResponseType() +
-                        "&scope=" + authorizationCodeRequest.getScopes().asParamValue() +
-                        "&launch=" + authorizationCodeRequest.getLaunchId() +
-                        "&redirect_uri=" + authorizationCodeRequest.getRedirectUri() +
-                        "&aud=" + authorizationCodeRequest.getFhirEndpoints().getFhirServiceApi() +
-                        "&state=" + authorizationCodeRequest.getOauthState()
-        );
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(authorizationCodeRequest.getFhirEndpoints().getAuthorizationEndpoint());
+        stringBuilder.append("?client_id=");
+        stringBuilder.append(authorizationCodeRequest.getClientId());
+        stringBuilder.append("&response_type=");
+        stringBuilder.append(authorizationCodeRequest.getResponseType());
+        stringBuilder.append("&scope=");
+        stringBuilder.append(authorizationCodeRequest.getScopes().asParamValue());
+        if (authorizationCodeRequest.getLaunchId() != null) {
+            stringBuilder.append("&launch=");
+            stringBuilder.append(authorizationCodeRequest.getLaunchId());
+        }
+        stringBuilder.append("&redirect_uri=");
+        stringBuilder.append(authorizationCodeRequest.getRedirectUri());
+        stringBuilder.append("&aud=");
+        stringBuilder.append(authorizationCodeRequest.getFhirEndpoints().getFhirServiceApi());
+        stringBuilder.append("&state=");
+        stringBuilder.append(authorizationCodeRequest.getOauthState());
+
+        response.setHeader("Location", stringBuilder.toString());
     }
 
     /**

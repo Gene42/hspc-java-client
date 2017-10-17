@@ -51,8 +51,6 @@ public class AuthorizationCodeRequest implements org.hspconsortium.client.auth.A
                 redirectUri,
                 oauthState);
 
-        Validate.notNull(launchId, "the launchId must not be null");
-
         this.launchId = launchId;
     }
 
