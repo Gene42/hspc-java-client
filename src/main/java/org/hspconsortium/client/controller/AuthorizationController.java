@@ -82,6 +82,17 @@ public class AuthorizationController<C extends Credentials> {
         AuthorizationCodeRequest authorizationCodeRequest = authorizationCodeRequestBuilder
                 .buildAuthorizationCodeRequest(request, clientId, scope, redirectUri);
 
+        doAuthorization(authorizationCodeRequest, response);
+    }
+
+    public void initiateStandaloneLaunchRequest(String fhirServiceUrl, HttpServletResponse response) {
+        AuthorizationCodeRequest authorizationCodeRequest = authorizationCodeRequestBuilder
+                .buildStandAloneAuthorizationCodeRequest(fhirServiceUrl, clientId, scope, redirectUri);
+
+        doAuthorization(authorizationCodeRequest, response);
+    }
+
+    private void doAuthorization(AuthorizationCodeRequest authorizationCodeRequest, HttpServletResponse response) {
         // remember the fhirSessionContext based on the state (for request-callback association)
         authorizationCodeSessionFactory.registerInContext(authorizationCodeRequest.getOauthState(), authorizationCodeRequest);
 
