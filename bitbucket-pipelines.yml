@@ -1,19 +1,49 @@
-# This is a sample build configuration for Java - Maven.
-# Check our guides at https://confluence.atlassian.com/x/zd-5Mw for more examples.
-# Only use spaces to indent your .yml configuration.
-# -----
-# You can specify a custom docker image from Docker Hub as your build environment.
+# This project uses the GitFlow Workflow as defined here:
+#   https://www.atlassian.com/git/tutorials/comparing-workflows#GitFlow-workflow
 image: maven:3.3.9-jdk-8
+clone:           # the 'clone' section
+  depth: 1       # the depth, in this case the clone will contain last one commits
 
 pipelines:
   default:
     - step:
         script:
-          - mvn -V -B install
+          - echo "Please use a GitFlow branch"
+          - exit 1;
   branches:
+    develop:
+      - step:
+          caches:
+            - maven
+          script:
+            # Deploy to hspc-nexus
+            - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d
+            - gpg --import private-key.gpg
+            - mvn -V -B -s settings.xml deploy -P DEPLOY-HSPC,hspc-nexus
+            # Deploy to the snapshot repo
+            - mvn -V -B -s settings.xml deploy -P DEPLOY
+    feature/*:
+      - step:
+          caches:
+            - maven
+          script:
+            - mvn -B verify
+    release/*:
+      - step:
+          caches:
+            - maven
+          script:
+            - mvn -B verify
+    hotfix/*:
+      - step:
+          caches:
+            - maven
+          script:
+            - mvn -B verify
     master:
       - step:
           script:
+            # Deploy to maven central
             - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d
-            - gpg --import private-key.gpg
-            - mvn -V -B -s settings.xml deploy -P DEPLOY
+            - gpg --batch --import private-key.gpg
+            - mvn -V -B -s settings.xml deploy -P DEPLOY,ossrh
