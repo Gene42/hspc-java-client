@@ -28,6 +28,7 @@ import org.hspconsortium.client.controller.FhirEndpoints;
 import org.hspconsortium.client.controller.FhirEndpointsProvider;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 public class AuthorizationCodeRequestBuilder {
@@ -85,5 +86,13 @@ public class AuthorizationCodeRequestBuilder {
         // create authorization request
         return new AuthorizationCodeRequest(authEndpoints, clientId, "code", scopes,
                 redirectUri, stateProvider.getNewState());
+    }
+
+    public String endSession(String fhirServiceURL, String redirectUri, HttpServletRequest request){
+        HttpSession httpSession = request.getSession();
+        httpSession.invalidate();
+        FhirEndpoints authEndpoints = fhirEndpointsProvider.getEndpoints(fhirServiceURL);
+        String logoutEndpoint = authEndpoints.getAuthorizationEndpoint().replace("authorize", "logout");
+        return "redirect:" + logoutEndpoint + "?hspcRedirectUrl=" + redirectUri;
     }
 }
