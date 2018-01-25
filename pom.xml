@@ -11,7 +11,7 @@
     <groupId>org.hspconsortium.client</groupId>
     <artifactId>hspc-java-client</artifactId>
     <packaging>jar</packaging>
-    <version>2.2.1</version>
+    <version>2.2.2-SNAPSHOT</version>
 
     <name>Health Services Platform Consortium - HSPC Client</name>
     <description>HSPC Java Client Aggregator POM</description>
