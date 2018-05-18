@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: dstu2
+
+example:
+  clientId: test_client
+  scope: launch patient/*.read
+  redirectUri: http://localhost:8080/redirect
+  clientSecret: secret
+  appEntryPoint: http://localhost:8080/welcome
