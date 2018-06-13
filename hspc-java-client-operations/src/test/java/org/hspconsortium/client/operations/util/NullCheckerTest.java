@@ -14,6 +14,8 @@ public class NullCheckerTest {
 		assertTrue(NullChecker.isNullish(str));
 		assertTrue(NullChecker.isNullish(""));
 		assertTrue(NullChecker.isNullish("    "));
+		assertTrue(NullChecker.isNullish("  null  "));
+		assertTrue(NullChecker.isNullish("    null"));
 		assertFalse(NullChecker.isNullish("abcXYZ"));
 	}
 	

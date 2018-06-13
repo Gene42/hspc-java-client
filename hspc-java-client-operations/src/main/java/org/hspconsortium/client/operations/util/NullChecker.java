@@ -3,7 +3,7 @@ package org.hspconsortium.client.operations.util;
 public class NullChecker {
 
 	public static boolean isNullish(String str){
-		return str==null || str.trim().equalsIgnoreCase("");
+		return str==null || str.trim().equalsIgnoreCase("") || str.trim().equalsIgnoreCase("null");
 	}
 	
 	public static boolean isNotNullish(String str){
