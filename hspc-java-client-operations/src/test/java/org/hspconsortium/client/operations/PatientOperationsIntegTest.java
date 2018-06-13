@@ -20,37 +20,41 @@ public class PatientOperationsIntegTest {
 	@Test
 	public void testGetPatientById(){
 		
-		//cerner session1
-		FHIRResourceSeverEndpointConfiguration cernerEndpointConfigurations = getHSPCSandboxFHIRConfiguration("SESSION#1");
+		//create endpoint configuration1 [i.e. endpoint url, secrets or JWK configurations]
+		FHIRResourceSeverEndpointConfiguration fhirEndpointConfiguration1 = getHSPCSandboxFHIRConfiguration("SESSION#1");
 	
-		// cerner session2
-		FHIRResourceSeverEndpointConfiguration cernerEndpointConfigurations2 = getHSPCSandboxFHIRConfiguration("SESSION#2");
+		//create endpoint configuration2 [i.e. endpoint url, secrets or JWK configurations]
+		FHIRResourceSeverEndpointConfiguration fhirEndpointConfiguration2 = getHSPCSandboxFHIRConfiguration("SESSION#2");
 		
-		// get factory configuration
+		// get fhir operations factory configurations [i.e. proxy config, timeout configs etc]
 		Map<HSPCClientOperationsFactoryConfigurationTypes, String> props = getFactoryConfigurations();
 		
-		HSPCClientOperationsFactory factory = new HSPCClientOperationsFactory(props,cernerEndpointConfigurations,cernerEndpointConfigurations2);
+		// initialize Operations factory [internally initializes threadsafe fhir sessions] -- application level factory instance, should be singleton bean.
+		HSPCClientOperationsFactory factory = new HSPCClientOperationsFactory(props,fhirEndpointConfiguration1,fhirEndpointConfiguration2);
 		
+		// get handle on patient operations to perform patient context operations. Returns singleton instances of *Operations classes.
 		PatientOperations patientResourceOperations = factory.getPatientOperations();
 		
+		// Sample #1: pull patients from all sessions
 		List<Patient> patients = patientResourceOperations.getPatientById("SMART-621799");
 		Assert.assertEquals(2, patients.size());
 		
+		//Sample #2: pull patient from selected session
 		patients = patientResourceOperations.getPatientById("SMART-621799","SESSION#1");
 		Assert.assertEquals(1, patients.size());
 		
-		patients = patientResourceOperations.getPatientById("SMART-621799","SESSION#2");
-		Assert.assertEquals(1, patients.size());
+		//Sample #3: pull patient from more than one selected session
+		patients = patientResourceOperations.getPatientById("SMART-621799","SESSION#1","SESSION#2");
+		Assert.assertEquals(2, patients.size());
 	}
 	
 	@Test
 	public void testActiveEncounters(){
-		//cerner session1
-		FHIRResourceSeverEndpointConfiguration cernerEndpointConfigurations = getHSPCSandboxFHIRConfiguration("SESSION#1");
+		FHIRResourceSeverEndpointConfiguration endpointConfigurations = getHSPCSandboxFHIRConfiguration("SESSION#1");
 		
 		Map<HSPCClientOperationsFactoryConfigurationTypes, String> props = getFactoryConfigurations();
 		
-		HSPCClientOperationsFactory factory = new HSPCClientOperationsFactory(props,cernerEndpointConfigurations,cernerEndpointConfigurations);
+		HSPCClientOperationsFactory factory = new HSPCClientOperationsFactory(props,endpointConfigurations,endpointConfigurations);
 		
 		PatientOperations patientResourceOperations = factory.getPatientOperations();
 		
@@ -76,12 +80,12 @@ public class PatientOperationsIntegTest {
 	}
 
 	private FHIRResourceSeverEndpointConfiguration getHSPCSandboxFHIRConfiguration(String sessionKey) {
-		FHIRResourceSeverEndpointConfiguration cernerEndpointConfigurations = new FHIRResourceSeverEndpointConfiguration();
-		cernerEndpointConfigurations.setSessionKey(sessionKey);
-		cernerEndpointConfigurations.setClientId("test_client");
-		cernerEndpointConfigurations.setClientSecret("secret");
-		cernerEndpointConfigurations.setFhirResourceServerURL("https://api.hspconsortium.org/hspc/data");
-		cernerEndpointConfigurations.setScopes("system/*.read");
-		return cernerEndpointConfigurations;
+		FHIRResourceSeverEndpointConfiguration endpointConfigurations = new FHIRResourceSeverEndpointConfiguration();
+		endpointConfigurations.setSessionKey(sessionKey);
+		endpointConfigurations.setClientId("test_client");
+		endpointConfigurations.setClientSecret("secret");
+		endpointConfigurations.setFhirResourceServerURL("https://api.hspconsortium.org/hspc/data");
+		endpointConfigurations.setScopes("system/*.read");
+		return endpointConfigurations;
 	}
 }
