@@ -1,31 +1,61 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.hspconsortium.client</groupId>
-        <artifactId>hspc-java-client-parent</artifactId>
-        <version>2.2.2-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>org.hspconsortium.client</groupId>
+		<artifactId>hspc-java-client-parent</artifactId>
+		<version>2.2.2-SNAPSHOT</version>
+	</parent>
 
-    <artifactId>hspc-java-client-operations</artifactId>
-    <packaging>jar</packaging>
+	<artifactId>hspc-java-client-operations</artifactId>
+	<packaging>jar</packaging>
 
-    <name>Health Services Platform Consortium - HSPC Client Operations</name>
-    <description>HSPC Java Client Operations</description>
-    <url>https://healthservices.atlassian.net/wiki/display/HSPC/Healthcare+Services+Platform+Consortium</url>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.hspconsortium.client</groupId>
-            <artifactId>hspc-java-client</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-base</artifactId>
-            <version>${hapi.version}</version>
-        </dependency>
-    </dependencies>
-
+	<name>Health Services Platform Consortium - HSPC Client Operations</name>
+	<description>HSPC Java Client Operations</description>
+	<url>https://healthservices.atlassian.net/wiki/display/HSPC/Healthcare+Services+Platform+Consortium</url>
+	<properties>
+		<powermock.version>1.7.1</powermock.version>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<environmentVariables>
+						<proxy.host></proxy.host>
+						<proxy.port></proxy.port>
+						<proxy.user></proxy.user>
+						<proxy.password></proxy.password>
+					</environmentVariables>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.hspconsortium.client</groupId>
+			<artifactId>hspc-java-client</artifactId>
+			<version>2.2.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
