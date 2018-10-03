@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law", "agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES", "CONDITIONS OF ANY KIND, either express", "implied.
@@ -19,7 +19,13 @@
  */
 package org.hspconsortium.client.session;
 
-import ca.uhn.fhir.model.api.IResource;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.hl7.fhir.instance.model.api.IBaseResource;
+
 import ca.uhn.fhir.model.dstu2.resource.Bundle;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.rest.gclient.IClientExecutable;
@@ -27,12 +33,7 @@ import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-public class PatientContextWrapperDSTU2 {
+public class PatientContextWrapperDSTU2 implements PatientContext {
 
     private Session session;
 
@@ -43,23 +44,13 @@ public class PatientContextWrapperDSTU2 {
         }
     }
 
-    /**
-     * Gets the patient resource
-     * @return Patient resource
-     */
+    @Override
     public Patient get() {
         return session.getContextDSTU2().getPatientResource();
     }
 
-    /**
-     * General purpose find
-     *
-     * @param clazz     Resource class to find
-     * @param criterion Criterion to be applied to the query.  Must include a patient matching criterion
-     * @param <T>       Resource
-     * @return A list of resource matching the criterion
-     */
-    public <T extends IResource> Collection<T> find(Class<T> clazz, ICriterion<?>... criterion) {
+    @Override
+    public <T extends IBaseResource> Collection<T> find(Class<T> clazz, ICriterion<?>... criterion) {
         String patientId = session.getContextDSTU2().getPatientResource().getIdElement().getIdPart();
         IQuery<ca.uhn.fhir.model.api.Bundle> queryBuilder = session.search().forResource(clazz);
 
@@ -75,7 +66,7 @@ public class PatientContextWrapperDSTU2 {
         return asCollection(results.execute());
     }
 
-    private <T extends IResource> Collection<T> asCollection(Bundle results) {
+    private <T extends IBaseResource> Collection<T> asCollection(Bundle results) {
         List<T> list = new ArrayList<>();
         for (Bundle.Entry entry : results.getEntry()) {
             list.add((T) entry.getResource());
@@ -83,7 +74,7 @@ public class PatientContextWrapperDSTU2 {
         return list;
     }
 
-    private ReferenceClientParam findPatientReferenceOnResource(Class<? extends IResource> clazz) {
+    private ReferenceClientParam findPatientReferenceOnResource(Class<? extends IBaseResource> clazz) {
         try {
             // HAPI consolidates different patient references into the PATIENT property
             // this will work for most patient references

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import ca.uhn.fhir.model.dstu2.resource.Location;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.rest.gclient.IUntypedQuery;
 
-public class SessionContextWrapperDSTU2 {
+public class SessionContextWrapperDSTU2 implements SessionContext {
 
     protected Session session;
 
@@ -60,17 +60,13 @@ public class SessionContextWrapperDSTU2 {
         this.localizeClaimUrl = doLocalizeClaimUrl;
     }
 
-    /**
-     * @return The patient id, or null if there is no patient id in context
-     */
+    @Override
     public String getPatientId() {
         // get this from the access token where it will be loaded if the user has requested a patient scope
         return session.getAccessToken().getPatientId();
     }
 
-    /**
-     * @return A patient context
-     */
+    @Override
     public PatientContextWrapperDSTU2 getPatientContext() {
         if (patientContextWrapperDSTU2 == null && session.getContextDSTU2().getPatientResource() != null) {
             patientContextWrapperDSTU2 = new PatientContextWrapperDSTU2(session);
@@ -78,10 +74,7 @@ public class SessionContextWrapperDSTU2 {
         return patientContextWrapperDSTU2;
     }
 
-    /**
-     * @return The patient resource corresponding to the patient id in context.  If caching is enabled, this
-     * resource will be remembered for subsequent calls, and not loaded fresh with each call.
-     */
+    @Override
     public Patient getPatientResource() {
         String patientId = getPatientId();
 
@@ -103,17 +96,12 @@ public class SessionContextWrapperDSTU2 {
         }
     }
 
-    /**
-     * @return The encounter id, or null if there is no encounter id in context
-     */
+    @Override
     public String getEncounterId() {
         return session.getAccessToken().getEncounterId();
     }
 
-    /**
-     * @return The encounter resource corresponding to the encounter id in context.  If caching is enabled, this
-     * resource will be remembered for subsequent calls, and not loaded fresh with each call.
-     */
+    @Override
     public Encounter getEncounterResource() {
         String encounterId = getEncounterId();
 
@@ -135,17 +123,12 @@ public class SessionContextWrapperDSTU2 {
         }
     }
 
-    /**
-     * @return The location id, or null if there is no location id in context
-     */
+    @Override
     public String getLocationId() {
         return session.getAccessToken().getLocationId();
     }
 
-    /**
-     * @return The location resource corresponding to the location id in context.  If caching is enabled, this
-     * resource will be remembered for subsequent calls, and not loaded fresh with each call.
-     */
+    @Override
     public Location getLocationResource() {
         String locationId = getLocationId();
 
@@ -167,17 +150,12 @@ public class SessionContextWrapperDSTU2 {
         }
     }
 
-    /**
-     * @return The profile for the current user, or null if there is no current user (this shouldn't happen)
-     */
+    @Override
     public String getIdTokenProfileClaim() {
         return session.getIdTokenProfileClaim();
     }
 
-    /**
-     * @return The fhir resource corresponding to the current user.  If caching is enabled, this
-     * resource will be remembered for subsequent calls, and not loaded fresh with each call.
-     */
+    @Override
     public IResource getCurrentUserResource() {
         String profileClaim = this.getIdTokenProfileClaim();
         if (profileClaim != null) {
@@ -252,39 +230,22 @@ public class SessionContextWrapperDSTU2 {
         throw new RuntimeException("ClaimResource not supported");
     }
 
-    /**
-     * Provides access to HAPI search() operations for rich search API
-     *
-     * @return IUntypedQuery
-     * @see <a href="http://jamesagnew.github.io/hapi-fhir/doc_rest_client.html">HAPI RESTful Client</a>
-     */
+    @Override
     public IUntypedQuery search() {
         return session.search();
     }
 
-    /**
-     * Caching allows the session getContextDSTU2 to remember values previously accessed in the session.
-     * This helps with repeated calls to the getPatientContext, encounter, or location getContextDSTU2.
-     * However, changes to the object, either inside or outside the session, are not visible to
-     * the cached version.
-     *
-     * @param enableCaching Enable caching?
-     */
+    @Override
     public void setEnableCaching(boolean enableCaching) {
         this.enableCaching = enableCaching;
     }
 
-    /**
-     * @return Caching enabled?
-     */
+    @Override
     public boolean getEnableCaching() {
         return enableCaching;
     }
 
-    /**
-     * Clears the patient, encounter, and location cached objects so they will be read from the resource server
-     * on the next request (if enabled)
-     */
+    @Override
     public void resetCache() {
         this.priorPatient = null;
         this.priorEncounter = null;
